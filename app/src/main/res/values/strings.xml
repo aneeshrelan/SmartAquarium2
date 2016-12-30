@@ -29,5 +29,7 @@
     <string name="on_duration">ON Duration:</string>
     <string name="minutes">minutes</string>
     <string name="delete">Delete</string>
+    <string name="refresh">Refresh</string>
+    <string name="string_refresh" />
 </resources>
 

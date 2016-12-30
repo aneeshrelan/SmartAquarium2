@@ -11,7 +11,10 @@ import android.os.AsyncTask;
 import android.provider.SyncStateContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.PopupMenu;
 import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.widget.ImageView;
@@ -58,6 +61,36 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
     @Override
     public void processFinish() {
         Log.d(Constants.log, "Finished - Domain: " + Constants.domain);
+    }
+
+    public void showOptions(View view) {
+
+        PopupMenu popupMenu = new PopupMenu(MainActivity.this, view);
+        popupMenu.getMenuInflater().inflate(R.menu.options, popupMenu.getMenu());
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch(item.getItemId())
+                {
+                    case R.id.refresh:
+                        Log.d(Constants.log, "Refresh");
+
+                        new CheckConnection(MainActivity.this).execute();
+
+                        break;
+
+                    case R.id.settings:
+                        Log.d(Constants.log, "Settings");
+                        Intent i = new Intent(MainActivity.this, Settings.class);
+                        i.putExtra("goback",true);
+                        startActivity(i);
+                }
+                return true;
+            }
+        });
+
+        popupMenu.show();
+
     }
 
 

@@ -15,6 +15,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,7 +58,56 @@ public class Settings extends AppCompatActivity implements CheckBox.OnCheckedCha
         remotePort = (TextView)findViewById(R.id.text_remotePort);
 
         remoteCheckbox.setOnCheckedChangeListener(this);
-        
+
+
+        Boolean goback;
+
+        try
+        {
+            goback = getIntent().getBooleanExtra("goback",false);
+            if(goback)
+            {
+                ImageView gobackImage = (ImageView)findViewById(R.id.goback);
+                gobackImage.setVisibility(View.VISIBLE);
+
+                gobackImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Settings.this.finish();
+                    }
+                });
+
+                SharedPreferences sp = getSharedPreferences(Constants.PREF_NAME, MODE_PRIVATE);
+
+                String sp_localDomain = sp.getString(Constants.key_domain_local,"");
+                String sp_remoteDomain = sp.getString(Constants.key_domain_remote,"");
+
+                String localDomain = sp_localDomain.substring(7,sp_localDomain.lastIndexOf(':'));
+                String localPort = sp_localDomain.substring(sp_localDomain.lastIndexOf(':')+1,sp_localDomain.lastIndexOf('/'));
+
+                ((EditText)findViewById(R.id.text_localDomain)).setText(localDomain);
+                ((EditText)findViewById(R.id.text_localPort)).setText(localPort);
+
+                if(!sp_remoteDomain.isEmpty())
+                {
+                    ((CheckBox)findViewById(R.id.remoteCheckbox)).setChecked(true);
+
+                    String remoteDomain = sp_remoteDomain.substring(7,sp_remoteDomain.lastIndexOf(':'));
+                    String remotePort = sp_remoteDomain.substring(sp_remoteDomain.lastIndexOf(':')+1, sp_remoteDomain.lastIndexOf('/'));
+
+                    ((EditText)findViewById(R.id.text_remoteDomain)).setText(remoteDomain);
+                    ((EditText)findViewById(R.id.text_remotePort)).setText(remotePort);
+                }
+
+
+
+            }
+        }
+        catch (Exception e)
+        {
+            Log.e(Constants.log, "Goback Exception e: " + e.getMessage());
+        }
+
     }
     
 
@@ -67,12 +118,14 @@ public class Settings extends AppCompatActivity implements CheckBox.OnCheckedCha
             ((TableRow) findViewById(R.id.heading_remote)).setVisibility(View.VISIBLE);
             ((TableRow) findViewById(R.id.row_remoteDomain)).setVisibility(View.VISIBLE);
             ((TableRow) findViewById(R.id.row_remotePort)).setVisibility(View.VISIBLE);
+            ((View)this.findViewById(R.id.separator)).setVisibility(View.VISIBLE);
         }
         else
         {
             ((TableRow) findViewById(R.id.heading_remote)).setVisibility(View.GONE);
             ((TableRow) findViewById(R.id.row_remoteDomain)).setVisibility(View.GONE);
             ((TableRow) findViewById(R.id.row_remotePort)).setVisibility(View.GONE);
+            ((View)this.findViewById(R.id.separator)).setVisibility(View.GONE);
         }
     }
 

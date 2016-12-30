@@ -95,7 +95,8 @@
                 android:adjustViewBounds="false"
                 android:background="@android:color/transparent"
                 android:layout_gravity="center|end"
-                android:contentDescription="@string/menu" />
+                android:contentDescription="@string/menu"
+                android:onClick="showOptions"/>
 
         </TableRow>
 
