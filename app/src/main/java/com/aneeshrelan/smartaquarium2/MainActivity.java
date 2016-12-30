@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
 
+        Log.d(Constants.log, "onResume");
         new CheckConnection().execute();
     }
 
@@ -85,14 +86,14 @@ public class MainActivity extends AppCompatActivity {
             anim.setInterpolator(new AccelerateDecelerateInterpolator());
             anim.start();
 
-
+            Log.d(Constants.log, localDomain + " - " + remoteDomain);
 
         }
 
         @Override
         protected Void doInBackground(String... params) {
 
-            ConnectivityManager mgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+           ConnectivityManager mgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo info = mgr.getActiveNetworkInfo();
 
             if(info == null)
@@ -107,56 +108,56 @@ public class MainActivity extends AppCompatActivity {
             StringRequest localRequest = new StringRequest(localDomain, future, future);
 
             queue.add(localRequest);
+            if(!localDomain.isEmpty()) {
+                try {
+                    if (InetAddress.getByName(localDomain.substring(7, localDomain.lastIndexOf(':'))).isReachable(1000)) {
+                        String localResponse = future.get(3, TimeUnit.SECONDS);
 
-            try {
-                if(InetAddress.getByName(localDomain.substring(7,localDomain.lastIndexOf(':'))).isReachable(1000))
-                {
-                    String localResponse = future.get(3, TimeUnit.SECONDS);
-
-                    if(localResponse.equals(Constants.validConnection))
-                    {
-                        flag = 1;
-                        return null;
+                        if (localResponse.equals(Constants.validConnection)) {
+                            flag = 1;
+                            return null;
+                        }
                     }
+                } catch (IOException e) {
+                    Log.e(Constants.log, "IOException e: " + e.getMessage());
+                } catch (InterruptedException e) {
+                    Log.e(Constants.log, "InterruptedException e: " + e.getMessage());
+                } catch (ExecutionException e) {
+                    Log.e(Constants.log, "ExecutionException e: " + e.getMessage());
+                } catch (TimeoutException e) {
+                    Log.e(Constants.log, "TimeoutException e: " + e.getMessage());
                 }
-            } catch (IOException e) {
-                Log.e(Constants.log, "IOException e: " + e.getMessage());
-            } catch (InterruptedException e) {
-                Log.e(Constants.log, "InterruptedException e: " + e.getMessage());
-            } catch (ExecutionException e) {
-                Log.e(Constants.log, "ExecutionException e: " + e.getMessage());
-            } catch (TimeoutException e) {
-                Log.e(Constants.log, "TimeoutException e: " + e.getMessage());
             }
 
+            if(!remoteDomain.isEmpty()) {
+                queue = Volley.newRequestQueue(MainActivity.this);
+                future = RequestFuture.newFuture();
 
-            queue = Volley.newRequestQueue(MainActivity.this);
-            future = RequestFuture.newFuture();
+                StringRequest remoteRequest = new StringRequest(remoteDomain, future, future);
 
-            StringRequest remoteRequest = new StringRequest(remoteDomain, future, future);
-
-            queue.add(remoteRequest);
+                queue.add(remoteRequest);
 
 
-            try {
-                String remoteResponse = future.get(15, TimeUnit.SECONDS);
+                try {
+                    String remoteResponse = future.get(15, TimeUnit.SECONDS);
 
-                if(remoteResponse.equals(Constants.validConnection))
-                {
-                    flag = 2;
-                    return null;
+                    if (remoteResponse.equals(Constants.validConnection)) {
+                        flag = 2;
+                        return null;
+                    }
+
+                } catch (InterruptedException e) {
+                    Log.e(Constants.log, "InterruptedException e: " + e.getMessage());
+                } catch (ExecutionException e) {
+                    Log.e(Constants.log, "ExecutionException e: " + e.getMessage());
+                } catch (TimeoutException e) {
+                    Log.e(Constants.log, "TimeoutException e: " + e.getMessage());
                 }
-
-            }  catch (InterruptedException e) {
-                Log.e(Constants.log, "InterruptedException e: " + e.getMessage());
-            } catch (ExecutionException e) {
-                Log.e(Constants.log, "ExecutionException e: " + e.getMessage());
-            } catch (TimeoutException e) {
-                Log.e(Constants.log, "TimeoutException e: " + e.getMessage());
             }
 
 
             return null;
+
         }
 
         @Override
