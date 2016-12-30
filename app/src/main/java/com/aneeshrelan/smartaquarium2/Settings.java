@@ -347,6 +347,7 @@ public class Settings extends AppCompatActivity implements CheckBox.OnCheckedCha
               case 3:
                   editor.putString(Constants.key_domain_local,localDomain);
                   editor.putString(Constants.key_domain_remote,remoteDomain);
+                  editor.commit();
                   delegate.processFinish();
                   break;
           }
