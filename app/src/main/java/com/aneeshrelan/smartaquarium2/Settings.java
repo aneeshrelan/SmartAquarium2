@@ -127,7 +127,8 @@ public class Settings extends AppCompatActivity implements CheckBox.OnCheckedCha
             else
             {
                 //check only local settings
-
+                local_domain = "http://" + local_domain + ":" + local_port + "/";
+                remote_domain = "http://" + remote_domain + ":" + remote_port + "/";
                 new CheckSettings(local_domain,remoteCheckbox.isChecked(),remote_domain).execute();
 
             }
@@ -186,31 +187,18 @@ public class Settings extends AppCompatActivity implements CheckBox.OnCheckedCha
 
             RequestQueue queue = Volley.newRequestQueue(Settings.this);
             RequestFuture<String> future = RequestFuture.newFuture();
-            
-            StringRequest request = new StringRequest(Request.Method.GET, localDomain, future,future);
+
+            StringRequest request = new StringRequest(localDomain, future, future);
+
             queue.add(request);
+
             try {
-                String localResponse = future.get(5, TimeUnit.SECONDS);
-                
+                String localResponse = future.get(3,TimeUnit.SECONDS);
+
                 if(localResponse.equals(Constants.validConnection))
                     flag++;
-                
-                publishProgress();
-                
-                queue = Volley.newRequestQueue(Settings.this);
-                future = RequestFuture.newFuture();
-                
-                request = new StringRequest(Request.Method.GET, remoteDomain, future,future);
-                
-                queue.add(request);
-                
-                String remoteResponse = future.get(15,TimeUnit.SECONDS);
-                
-                if(remoteResponse.equals(Constants.validConnection))
-                    flag += 2;
-                
-                
-                
+
+
             } catch (InterruptedException e) {
                 Log.e(Constants.log, "InterruptedException e: " + e.getMessage());
             } catch (ExecutionException e) {
@@ -219,7 +207,6 @@ public class Settings extends AppCompatActivity implements CheckBox.OnCheckedCha
                 Log.e(Constants.log, "TimeoutException e: " + e.getMessage());
             }
 
-
             return null;
         }
 
@@ -227,87 +214,43 @@ public class Settings extends AppCompatActivity implements CheckBox.OnCheckedCha
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             pd.dismiss();
+            
             switch (flag)
             {
                 case -1:
                     AlertDialog.Builder builder = new AlertDialog.Builder(Settings.this);
-                    builder.setTitle("Error").setMessage("No network connection").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    builder.setTitle("Error").setMessage("No Network Connection").setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-
+                            
                         }
                     });
                     AlertDialog a = builder.create();
                     a.show();
-
+                    
                     break;
-                
-                
+
                 case 0:
                     builder = new AlertDialog.Builder(Settings.this);
-                    builder.setTitle("Connection Error").setMessage("Cannot connect to local/remote network. Please check settings and try again").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    builder.setTitle("Connection Failed").setMessage("Unable to connect to local/remote server").setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
 
                         }
                     });
+
                     a = builder.create();
                     a.show();
-                    
+
                     break;
-                
+
                 case 1:
-                    
-                    if(isRemote)
-                    {
-                        builder = new AlertDialog.Builder(Settings.this);
-                        builder.setTitle("Remote Connection Error").setMessage("Cannot connect to Remote server").setPositiveButton("Continue with Local Settings", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                    Toast.makeText(Settings.this, "Local correct", Toast.LENGTH_SHORT).show();
 
-                            }
-                        }).setNegativeButton("Change Settings", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                
-                            }
-                        });
-                        a = builder.create();
-                        a.show();
-                        
-                    }
-                    else
-                    {
-                        Toast.makeText(Settings.this, "Local Correct", Toast.LENGTH_SHORT).show();
-                    }
-                    
-                    break;
-                    
-                case 2:
-                    builder = new AlertDialog.Builder(Settings.this);
-                    builder.setTitle("Local Network Connection Error").setMessage("Cannot connect through Local Network").setPositiveButton("Continue with Remote Server Settings", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
 
-                        }
-                    }).setNegativeButton("Change Settings", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
 
-                        }
-                    });
-                    a = builder.create();
-                    a.show();
-                    
-                    break;
-                
-                case 3:
-
-                    Toast.makeText(Settings.this, "Local & Remote Correct", Toast.LENGTH_SHORT).show();
-                    
-                    break;
-                    
             }
+            
         }
 
         @Override
