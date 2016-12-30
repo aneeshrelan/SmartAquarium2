@@ -3,6 +3,8 @@ package com.aneeshrelan.smartaquarium2;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -32,7 +34,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-public class Settings extends AppCompatActivity implements CheckBox.OnCheckedChangeListener {
+public class Settings extends AppCompatActivity implements CheckBox.OnCheckedChangeListener, AsyncResponse {
 
     TextView localDomain;
     TextView localPort;
@@ -121,7 +123,7 @@ public class Settings extends AppCompatActivity implements CheckBox.OnCheckedCha
                     local_domain = "http://" + local_domain + ":" + local_port + "/";
                     remote_domain = "http://" + remote_domain + ":" + remote_port + "/";
 
-                   new CheckSettings(local_domain,remoteCheckbox.isChecked(),remote_domain).execute();
+                   new CheckSettings(this,local_domain,remoteCheckbox.isChecked(),remote_domain).execute();
                 }
             }
             else
@@ -129,11 +131,20 @@ public class Settings extends AppCompatActivity implements CheckBox.OnCheckedCha
                 //check only local settings
                 local_domain = "http://" + local_domain + ":" + local_port + "/";
                 remote_domain = "http://" + remote_domain + ":" + remote_port + "/";
-                new CheckSettings(local_domain,remoteCheckbox.isChecked(),remote_domain).execute();
+                new CheckSettings(this,local_domain,remoteCheckbox.isChecked(),remote_domain).execute();
 
             }
         }
         
+    }
+
+    @Override
+    public void processFinish() {
+
+        Intent i = new Intent(Settings.this, MainActivity.class);
+        startActivity(i);
+        finish();
+
     }
 
 
@@ -148,8 +159,13 @@ public class Settings extends AppCompatActivity implements CheckBox.OnCheckedCha
         
         boolean isRemote;
 
-        public CheckSettings(String localDomain, boolean isRemote, String remoteDomain)
+        public AsyncResponse delegate = null;
+
+        public CheckSettings(AsyncResponse delegate, String localDomain, boolean isRemote, String remoteDomain)
         {
+
+            this.delegate = delegate;
+
             this.localDomain = localDomain;
 
             this.isRemote = isRemote;
@@ -244,7 +260,7 @@ public class Settings extends AppCompatActivity implements CheckBox.OnCheckedCha
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             pd.dismiss();
-            
+            final SharedPreferences.Editor editor = getSharedPreferences(Constants.PREF_NAME, Settings.this.MODE_PRIVATE).edit();
           switch (flag)
           {
               case -1:
@@ -280,6 +296,13 @@ public class Settings extends AppCompatActivity implements CheckBox.OnCheckedCha
                           @Override
                           public void onClick(DialogInterface dialog, int which) {
                               //save only local server settings
+
+
+                              editor.putString(Constants.key_domain_local, localDomain);
+                              editor.commit();
+                              
+                              delegate.processFinish();
+
                           }
                       }).setNegativeButton("Change Settings", new DialogInterface.OnClickListener() {
                           @Override
@@ -292,7 +315,11 @@ public class Settings extends AppCompatActivity implements CheckBox.OnCheckedCha
                   }
                   else
                   {
-                      Log.d(Constants.log, "Local correct");
+
+
+                      editor.putString(Constants.key_domain_local, localDomain);
+                      editor.commit();
+                      delegate.processFinish();
                   }
                   break;
 
@@ -302,6 +329,10 @@ public class Settings extends AppCompatActivity implements CheckBox.OnCheckedCha
                       @Override
                       public void onClick(DialogInterface dialog, int which) {
                           //save only remote server settings
+
+                          editor.putString(Constants.key_domain_remote, remoteDomain);
+                          editor.commit();
+                          delegate.processFinish();
                       }
                   }).setNegativeButton("Change Settings", new DialogInterface.OnClickListener() {
                       @Override
@@ -314,9 +345,13 @@ public class Settings extends AppCompatActivity implements CheckBox.OnCheckedCha
                   break;
 
               case 3:
-                  Toast.makeText(Settings.this, "Local & Remote Correct", Toast.LENGTH_SHORT).show();
+                  editor.putString(Constants.key_domain_local,localDomain);
+                  editor.putString(Constants.key_domain_remote,remoteDomain);
+                  delegate.processFinish();
                   break;
           }
+
+            
             
         }
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
@@ -11,7 +12,223 @@
     tools:context="com.aneeshrelan.smartaquarium2.MainActivity">
 
     <TextView
+        android:text="@string/initialTemp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:id="@+id/gpuTemp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:textSize="17sp"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@mipmap/ic_connecting"
+        android:id="@+id/connection"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/connection" />
+
+    <TextView
+        android:text="@string/gpu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/label_gpu"
+        android:layout_alignParentBottom="true"
+        android:layout_toStartOf="@+id/gpuTemp"
+        android:layout_marginEnd="5dp"
+        tools:ignore="RelativeOverlap"
+        android:textSize="14sp" />
+
+    <TextView
+        android:text="@string/initialTemp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cpuTemp"
+        android:layout_toEndOf="@+id/label_cpu"
+        android:layout_alignParentBottom="true"
+        android:textSize="17sp" />
+
+    <TextView
+        android:text="@string/cpu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/label_cpu"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginEnd="5dp"
+        android:textSize="14sp" />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:stretchColumns="0,1"
+        android:id="@+id/table_main">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/row_waterTemp">
+
+            <TextView
+                android:text="@string/label_waterTemperature"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/label_waterTemp"
+                android:layout_gravity="center|start"
+                android:textSize="17sp" />
+
+            <TextView
+                android:text="@string/initialTemp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/waterTemp"
+                android:layout_gravity="center|end"
+                android:textSize="17sp" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@mipmap/ic_menu"
+                android:id="@+id/menu"
+                android:cropToPadding="true"
+                android:adjustViewBounds="false"
+                android:background="@android:color/transparent"
+                android:layout_gravity="center|end"
+                android:contentDescription="@string/menu" />
+
+        </TableRow>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:background="#c0c0c0"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:id="@+id/separator" />
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/row_waterFilter"
+            android:layout_marginBottom="20dp">
+
+            <TextView
+                android:text="@string/label_waterFilter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/label_waterFilter"
+                android:textSize="17sp"
+                android:layout_gravity="center|start" />
+
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/switch1"
+                android:layout_gravity="center|end" />
+
+            <Button
+                android:text="@string/schedule"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/schedule1"
+                android:textSize="12sp"
+                android:minHeight="40dp"
+                android:minWidth="20dp"/>
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/row_airPump"
+            android:layout_marginBottom="20dp">
+
+            <TextView
+                android:text="@string/air_pump"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/label_airPump"
+                android:textSize="17sp"
+                android:layout_gravity="center|start" />
+
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/switch2"
+                android:layout_gravity="center|end" />
+
+            <Button
+                android:text="@string/schedule"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/schedule2"
+                android:textSize="12sp"
+                android:minHeight="40dp"
+                android:minWidth="20dp"/>
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/row_dayLight"
+            android:layout_marginBottom="20dp">
+
+            <TextView
+                android:text="@string/day_light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/label_dayLight"
+                android:textSize="17sp"
+                android:layout_gravity="center|start" />
+
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/switch3"
+                android:layout_gravity="center|end" />
+
+            <Button
+                android:text="@string/schedule"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/schedule3"
+                android:textSize="12sp"
+                android:minHeight="40dp"
+                android:minWidth="20dp"/>
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/row_nightLight"
+            android:layout_marginBottom="20dp">
+
+            <TextView
+                android:text="@string/night_light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/label_nightLigt"
+                android:textSize="17sp"
+                android:layout_gravity="center|start" />
+
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/switch4"
+                android:layout_gravity="center|end" />
+
+            <Button
+                android:text="@string/schedule"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/schedule4"
+                android:textSize="12sp"
+                android:minHeight="40dp"
+                android:minWidth="20dp"/>
+
+        </TableRow>
+    </TableLayout>
 </RelativeLayout>
