@@ -222,6 +222,8 @@ public class Settings extends AppCompatActivity implements CheckBox.OnCheckedCha
                 String remoteResponse = null;
                 try {
                     remoteResponse = future.get(15, TimeUnit.SECONDS);
+                    if(remoteResponse.equals(Constants.validConnection))
+                        flag += 2;
                 } catch (InterruptedException e) {
                     Log.e(Constants.log, "InterruptedException e: " + e.getMessage());
                 } catch (ExecutionException e) {
@@ -230,8 +232,7 @@ public class Settings extends AppCompatActivity implements CheckBox.OnCheckedCha
                     Log.e(Constants.log, "TimeoutException e: " + e.getMessage());
                 }
 
-                if(remoteResponse.equals(Constants.validConnection))
-                    flag += 2;
+
             }
 
 
@@ -296,11 +297,24 @@ public class Settings extends AppCompatActivity implements CheckBox.OnCheckedCha
                   break;
 
               case 2:
-                  Log.d(Constants.log, "Only remote no local");
+                  builder = new AlertDialog.Builder(Settings.this);
+                  builder.setTitle("Local Connection Failed").setMessage("Unable to connect to Local Network Server").setPositiveButton("Continue with Remote Server", new DialogInterface.OnClickListener() {
+                      @Override
+                      public void onClick(DialogInterface dialog, int which) {
+                          //save only remote server settings
+                      }
+                  }).setNegativeButton("Change Settings", new DialogInterface.OnClickListener() {
+                      @Override
+                      public void onClick(DialogInterface dialog, int which) {
+                          //do nothing, dismiss dialog
+                      }
+                  });
+                  a = builder.create();
+                  a.show();
                   break;
 
               case 3:
-                  Log.d(Constants.log, "Both");
+                  Toast.makeText(Settings.this, "Local & Remote Correct", Toast.LENGTH_SHORT).show();
                   break;
           }
             
