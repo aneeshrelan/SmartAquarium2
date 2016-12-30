@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -108,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
         StringRequest request = new StringRequest(Constants.url_temp, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                ((TextView)findViewById(R.id.waterTemp)).setEnabled(true);
                 ((TextView)findViewById(R.id.waterTemp)).setText(response.trim() + " °C");
             }
         }, new Response.ErrorListener() {
@@ -128,6 +130,9 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
         StringRequest request = new StringRequest(Constants.url_coreTemps, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                ((TextView)findViewById(R.id.gpuTemp)).setEnabled(true);
+                ((TextView)findViewById(R.id.cpuTemp)).setEnabled(true);
+
                 ((TextView)findViewById(R.id.gpuTemp)).setText(response.split(",")[0].trim() + "  °C");
                 ((TextView)findViewById(R.id.cpuTemp)).setText(response.split(",")[1].trim() + "  °C");
             }
@@ -219,6 +224,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
 
         if(!Constants.domain.isEmpty())
         {
+            toggleScheduleButtons(true);
             loadData();
         }
         else
@@ -228,10 +234,33 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
 
     }
 
-    protected void prepareForRefresh()
+    protected void disableSwitches()
     {
         for (CompoundButton sw : switches.values())
             sw.setEnabled(false);
+    }
+
+    protected void zeroTemps()
+    {
+        ((TextView)findViewById(R.id.waterTemp)).setEnabled(false);
+        ((TextView)findViewById(R.id.gpuTemp)).setEnabled(false);
+        ((TextView)findViewById(R.id.cpuTemp)).setEnabled(false);
+    }
+
+    protected void toggleScheduleButtons(Boolean state)
+    {
+        ((Button)findViewById(R.id.schedule1)).setEnabled(state);
+        ((Button)findViewById(R.id.schedule2)).setEnabled(state);
+        ((Button)findViewById(R.id.schedule3)).setEnabled(state);
+        ((Button)findViewById(R.id.schedule4)).setEnabled(state);
+    }
+
+
+    protected void prepareForRefresh()
+    {
+        disableSwitches();
+        zeroTemps();
+        toggleScheduleButtons(false);
     }
 
 
