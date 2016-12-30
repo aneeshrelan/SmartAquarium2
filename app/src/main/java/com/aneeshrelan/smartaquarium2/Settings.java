@@ -3,6 +3,8 @@ package com.aneeshrelan.smartaquarium2;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -14,7 +16,14 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.RequestFuture;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
 import org.w3c.dom.Text;
+
+import java.net.InetAddress;
 
 public class Settings extends AppCompatActivity implements CheckBox.OnCheckedChangeListener {
 
@@ -94,13 +103,16 @@ public class Settings extends AppCompatActivity implements CheckBox.OnCheckedCha
                 else
                 {
                     //check local and remote settings
+                    local_domain = "http://" + local_domain + ":" + local_port + "/";
+                    remote_domain = "http://" + remote_domain + ":" + remote_port + "/";
 
+                    new CheckSettings(getApplicationContext(),local_domain,remoteCheckbox.isChecked(), remote_domain).execute();
                 }
             }
             else
             {
                 //check only local settings
-
+                new CheckSettings(getApplicationContext(),local_domain,remoteCheckbox.isChecked(), remote_domain).execute();
             }
         }
         
@@ -115,11 +127,17 @@ public class Settings extends AppCompatActivity implements CheckBox.OnCheckedCha
 
         ProgressDialog pd;
 
-        public CheckSettings(Context context, String localDomain, String remoteDomain)
+        Integer flag = 0;
+
+        public CheckSettings(Context context, String localDomain, boolean isRemote, String remoteDomain)
         {
             this.context = context;
             this.localDomain = localDomain;
-            this.remoteDomain = remoteDomain;
+
+            if(isRemote)
+                this.remoteDomain = remoteDomain;
+            else
+                this.remoteDomain = "";
         }
 
         @Override
@@ -134,9 +152,31 @@ public class Settings extends AppCompatActivity implements CheckBox.OnCheckedCha
         @Override
         protected Void doInBackground(String... params) {
 
+            RequestQueue queue = Volley.newRequestQueue(context);
+            RequestFuture<String> future = RequestFuture.newFuture();
 
+            ConnectivityManager mgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetworkInfo = mgr.getActiveNetworkInfo();
+
+            if(activeNetworkInfo == null)
+            {
+                flag = -1;
+                return null;
+            }
 
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            switch (flag)
+            {
+                case -1:
+                    Toast.makeText(context, "No Network Connection", Toast.LENGTH_SHORT).show();
+                    break;
+            }
         }
     }
 
