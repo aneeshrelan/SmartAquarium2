@@ -232,89 +232,51 @@ public class Settings extends AppCompatActivity implements CheckBox.OnCheckedCha
             super.onPostExecute(aVoid);
             pd.dismiss();
             
-            switch (flag)
-            {
-                case -1:
-                    AlertDialog.Builder builder = new AlertDialog.Builder(Settings.this);
-                    builder.setTitle("Error").setMessage("No Network Connection").setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            
-                        }
-                    });
-                    AlertDialog a = builder.create();
-                    a.show();
-                    
-                    break;
+          switch (flag)
+          {
+              case -1:
+                  AlertDialog.Builder builder = new AlertDialog.Builder(Settings.this);
+                  builder.setTitle("Error").setMessage("No Network Connection available").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                      @Override
+                      public void onClick(DialogInterface dialog, int which) {
 
-                case 0:
-                    builder = new AlertDialog.Builder(Settings.this);
-                    builder.setTitle("Connection Failed").setMessage("Unable to connect to " + ((this.isRemote) ? " Local/Remote " : "Local ") + "server").setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
+                      }
+                  });
+                  AlertDialog a = builder.create();
+                  a.show();
+                  break;
 
-                        }
-                    });
+              case 0:
+                  builder = new AlertDialog.Builder(Settings.this);
+                  builder.setTitle("Connection Failed").setMessage("Unable to connect to " + ((isRemote) ? "Local/Remote" : "Local Network") + " server").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                      @Override
+                      public void onClick(DialogInterface dialog, int which) {
 
-                    a = builder.create();
-                    a.show();
+                      }
+                  });
+                  a = builder.create();
+                  a.show();
+                  break;
 
-                    break;
+              case 1:
+                  if(isRemote)
+                  {
+                      Log.d(Constants.log, "Only local not remote");
+                  }
+                  else
+                  {
+                      Log.d(Constants.log, "Local correct");
+                  }
+                  break;
 
-                case 1:
+              case 2:
+                  Log.d(Constants.log, "Only remote no local");
+                  break;
 
-                    if(isRemote)
-                    {
-                        builder = new AlertDialog.Builder(Settings.this);
-                        builder.setTitle("Remote Connection Failed").setMessage("Unable to connect to Remote Server").setPositiveButton("Continue with Local Network settings", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //save only local network settings
-                            }
-                        }).setNegativeButton("Change Settings", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //do nothing, dismiss dialog
-                            }
-                        });
-
-                        a = builder.create();
-                        a.show();
-                    }
-                    else
-                    {
-                        Toast.makeText(Settings.this, "Local correct", Toast.LENGTH_SHORT).show();
-                    }
-
-                    break;
-
-                case 2:
-
-                    builder = new AlertDialog.Builder(Settings.this);
-                    builder.setTitle("Local Network Connection Failed").setMessage("Unable to connect to Local Network Server").setPositiveButton("Continue with Remote Server Settings", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            //save only remote server settings
-                        }
-                    }).setNegativeButton("Change Settings", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            //do nothing, dismiss dialog
-                        }
-                    });
-
-                    a = builder.create();
-                    a.show();
-
-                    break;
-
-                case 3:
-                    Toast.makeText(Settings.this, "Local & Remote Correct", Toast.LENGTH_SHORT).show();
-                    break;
-
-
-
-            }
+              case 3:
+                  Log.d(Constants.log, "Both");
+                  break;
+          }
             
         }
 
