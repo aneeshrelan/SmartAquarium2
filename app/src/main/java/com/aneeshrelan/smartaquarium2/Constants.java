@@ -31,6 +31,8 @@ public class Constants {
     public static String url_coreTemps;
 
 
+    public static int localReachableTimeout = 1000;
+
     public static void createURL()
     {
         url_toggle = domain + "toggle";
