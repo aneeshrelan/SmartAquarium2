@@ -224,7 +224,6 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
 
         if(!Constants.domain.isEmpty())
         {
-            toggleScheduleButtons(true);
             loadData();
         }
         else

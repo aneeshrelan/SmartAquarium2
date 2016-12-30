@@ -82,11 +82,14 @@ public class Settings extends AppCompatActivity implements CheckBox.OnCheckedCha
                 String sp_localDomain = sp.getString(Constants.key_domain_local,"");
                 String sp_remoteDomain = sp.getString(Constants.key_domain_remote,"");
 
-                String localDomain = sp_localDomain.substring(7,sp_localDomain.lastIndexOf(':'));
-                String localPort = sp_localDomain.substring(sp_localDomain.lastIndexOf(':')+1,sp_localDomain.lastIndexOf('/'));
+                Log.d(Constants.log, localDomain + " - " + remoteDomain);
+                if(!sp_localDomain.isEmpty()) {
+                    String localDomain = sp_localDomain.substring(7, sp_localDomain.lastIndexOf(':'));
+                    String localPort = sp_localDomain.substring(sp_localDomain.lastIndexOf(':') + 1, sp_localDomain.lastIndexOf('/'));
 
-                ((EditText)findViewById(R.id.text_localDomain)).setText(localDomain);
-                ((EditText)findViewById(R.id.text_localPort)).setText(localPort);
+                    ((EditText) findViewById(R.id.text_localDomain)).setText(localDomain);
+                    ((EditText) findViewById(R.id.text_localPort)).setText(localPort);
+                }
 
                 if(!sp_remoteDomain.isEmpty())
                 {
