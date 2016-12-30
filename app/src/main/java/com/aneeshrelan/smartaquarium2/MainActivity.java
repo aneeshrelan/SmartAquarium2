@@ -18,9 +18,12 @@ import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -58,9 +61,66 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
         new CheckConnection(this).execute();
     }
 
+    protected void waterTemp()
+    {
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        StringRequest request = new StringRequest(Constants.url_temp, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                ((TextView)findViewById(R.id.waterTemp)).setText(response.trim() + " °C");
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(Constants.log, "Water Temp Error: " + error.getMessage());
+            }
+        });
+
+        queue.add(request);
+        queue.start();
+    }
+
+    protected void coreTemps()
+    {
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        StringRequest request = new StringRequest(Constants.url_coreTemps, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                ((TextView)findViewById(R.id.gpuTemp)).setText(response.split(",")[0].trim() + "  °C");
+                ((TextView)findViewById(R.id.cpuTemp)).setText(response.split(",")[1].trim() + "  °C");
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(Constants.log, "CoreTemps Error: " + error.getMessage());
+            }
+        });
+
+        queue.add(request);
+        queue.start();
+    }
+
+    protected void loadData()
+    {
+        waterTemp();
+        coreTemps();
+    }
+
+
     @Override
     public void processFinish() {
-        Log.d(Constants.log, "Finished - Domain: " + Constants.domain);
+
+        if(!Constants.domain.isEmpty())
+        {
+            loadData();
+        }
+        else
+        {
+            Log.e(Constants.log, "Empty Domain");
+        }
+
     }
 
     public void showOptions(View view) {
