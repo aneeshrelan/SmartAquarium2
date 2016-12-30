@@ -49,7 +49,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
+
+        new CheckConnection().execute();
     }
+
 
     private class CheckConnection extends AsyncTask<String, Void, Void>
     {
