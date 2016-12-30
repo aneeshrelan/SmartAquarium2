@@ -261,7 +261,21 @@ public class Settings extends AppCompatActivity implements CheckBox.OnCheckedCha
               case 1:
                   if(isRemote)
                   {
-                      Log.d(Constants.log, "Only local not remote");
+
+                      builder = new AlertDialog.Builder(Settings.this);
+                      builder.setTitle("Remote Connection Failed").setMessage("Unable to connect to Remote Server").setPositiveButton("Continue with Local Network Settings", new DialogInterface.OnClickListener() {
+                          @Override
+                          public void onClick(DialogInterface dialog, int which) {
+                              //save only local server settings
+                          }
+                      }).setNegativeButton("Change Settings", new DialogInterface.OnClickListener() {
+                          @Override
+                          public void onClick(DialogInterface dialog, int which) {
+                              //do nothing, dismiss dialog
+                          }
+                      });
+                      a = builder.create();
+                      a.show();
                   }
                   else
                   {
