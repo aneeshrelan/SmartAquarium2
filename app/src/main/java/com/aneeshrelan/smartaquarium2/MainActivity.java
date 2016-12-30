@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.RequestFuture;
@@ -129,6 +130,32 @@ public class MainActivity extends AppCompatActivity {
             }
 
 
+            queue = Volley.newRequestQueue(MainActivity.this);
+            future = RequestFuture.newFuture();
+
+            StringRequest remoteRequest = new StringRequest(remoteDomain, future, future);
+
+            queue.add(remoteRequest);
+
+
+            try {
+                String remoteResponse = future.get(15, TimeUnit.SECONDS);
+
+                if(remoteResponse.equals(Constants.validConnection))
+                {
+                    flag = 2;
+                    return null;
+                }
+
+            }  catch (InterruptedException e) {
+                Log.e(Constants.log, "InterruptedException e: " + e.getMessage());
+            } catch (ExecutionException e) {
+                Log.e(Constants.log, "ExecutionException e: " + e.getMessage());
+            } catch (TimeoutException e) {
+                Log.e(Constants.log, "TimeoutException e: " + e.getMessage());
+            }
+
+
             return null;
         }
 
@@ -139,6 +166,35 @@ public class MainActivity extends AppCompatActivity {
             anim.cancel();
 
             Log.d(Constants.log, flag + "");
+
+            switch (flag)
+            {
+                case -1:
+                    connection.setImageResource(R.mipmap.ic_no);
+                    Toast.makeText(MainActivity.this, "No Network Connection", Toast.LENGTH_SHORT).show();
+
+                    break;
+
+                case 0:
+                    connection.setImageResource(R.mipmap.ic_no);
+                    Toast.makeText(MainActivity.this, "Cannot connect to Aquarium", Toast.LENGTH_SHORT).show();
+
+                    break;
+
+                case 1:
+                    connection.setImageResource(R.mipmap.ic_local);
+                    Toast.makeText(MainActivity.this, "Connected in Local Network", Toast.LENGTH_SHORT).show();
+
+                    break;
+
+                case 2:
+                    connection.setImageResource(R.mipmap.ic_internet);
+
+                    Toast.makeText(MainActivity.this, "Connected via Remote Server", Toast.LENGTH_SHORT).show();
+
+                    break;
+
+            }
         }
     }
 
