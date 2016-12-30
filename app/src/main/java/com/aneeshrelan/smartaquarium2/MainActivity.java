@@ -135,6 +135,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            anim.end();
+            anim.cancel();
 
             Log.d(Constants.log, flag + "");
         }
