@@ -1,15 +1,31 @@
 package com.aneeshrelan.smartaquarium2;
 
 import android.animation.ObjectAnimator;
+import android.app.DownloadManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.provider.SyncStateContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.widget.ImageView;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.RequestFuture;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import java.io.IOException;
+import java.net.InetAddress;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -72,7 +88,52 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(String... params) {
 
+            ConnectivityManager mgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo info = mgr.getActiveNetworkInfo();
+
+            if(info == null)
+            {
+                flag = -1;
+                return null;
+            }
+
+            RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
+            RequestFuture<String> future = RequestFuture.newFuture();
+
+            StringRequest localRequest = new StringRequest(localDomain, future, future);
+
+            queue.add(localRequest);
+
+            try {
+                if(InetAddress.getByName(localDomain.substring(7,localDomain.lastIndexOf(':'))).isReachable(1000))
+                {
+                    String localResponse = future.get(3, TimeUnit.SECONDS);
+
+                    if(localResponse.equals(Constants.validConnection))
+                    {
+                        flag = 1;
+                        return null;
+                    }
+                }
+            } catch (IOException e) {
+                Log.e(Constants.log, "IOException e: " + e.getMessage());
+            } catch (InterruptedException e) {
+                Log.e(Constants.log, "InterruptedException e: " + e.getMessage());
+            } catch (ExecutionException e) {
+                Log.e(Constants.log, "ExecutionException e: " + e.getMessage());
+            } catch (TimeoutException e) {
+                Log.e(Constants.log, "TimeoutException e: " + e.getMessage());
+            }
+
+
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            Log.d(Constants.log, flag + "");
         }
     }
 
