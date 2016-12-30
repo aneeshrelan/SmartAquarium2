@@ -198,23 +198,6 @@ public class Settings extends AppCompatActivity implements CheckBox.OnCheckedCha
                 if(localResponse.equals(Constants.validConnection))
                     flag++;
 
-                publishProgress();
-
-                queue = Volley.newRequestQueue(Settings.this);
-                future = RequestFuture.newFuture();
-
-                if(isRemote)
-                {
-                    request = new StringRequest(remoteDomain, future, future);
-
-                    queue.add(request);
-
-                    String remoteResponse = future.get(15, TimeUnit.SECONDS);
-
-                    if(remoteResponse.equals(Constants.validConnection))
-                        flag += 2;
-                }
-
 
             } catch (InterruptedException e) {
                 Log.e(Constants.log, "InterruptedException e: " + e.getMessage());
@@ -223,6 +206,35 @@ public class Settings extends AppCompatActivity implements CheckBox.OnCheckedCha
             } catch (TimeoutException e) {
                 Log.e(Constants.log, "TimeoutException e: " + e.getMessage());
             }
+
+
+            publishProgress();
+
+            queue = Volley.newRequestQueue(Settings.this);
+            future = RequestFuture.newFuture();
+
+            if(isRemote)
+            {
+                request = new StringRequest(remoteDomain, future, future);
+
+                queue.add(request);
+
+                String remoteResponse = null;
+                try {
+                    remoteResponse = future.get(15, TimeUnit.SECONDS);
+                } catch (InterruptedException e) {
+                    Log.e(Constants.log, "InterruptedException e: " + e.getMessage());
+                } catch (ExecutionException e) {
+                    Log.e(Constants.log, "ExecutionException e: " + e.getMessage());
+                } catch (TimeoutException e) {
+                    Log.e(Constants.log, "TimeoutException e: " + e.getMessage());
+                }
+
+                if(remoteResponse.equals(Constants.validConnection))
+                    flag += 2;
+            }
+
+
 
             return null;
         }
@@ -263,7 +275,7 @@ public class Settings extends AppCompatActivity implements CheckBox.OnCheckedCha
                   {
 
                       builder = new AlertDialog.Builder(Settings.this);
-                      builder.setTitle("Remote Connection Failed").setMessage("Unable to connect to Remote Server").setPositiveButton("Continue with Local Network Settings", new DialogInterface.OnClickListener() {
+                      builder.setTitle("Remote Connection Failed").setMessage("Unable to connect to Remote Server").setPositiveButton("Continue with Local Settings", new DialogInterface.OnClickListener() {
                           @Override
                           public void onClick(DialogInterface dialog, int which) {
                               //save only local server settings
