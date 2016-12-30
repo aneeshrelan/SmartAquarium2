@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,17 +25,35 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-public class MainActivity extends AppCompatActivity implements AsyncResponse {
+public class MainActivity extends AppCompatActivity implements AsyncResponse, CompoundButton.OnCheckedChangeListener {
+
+    CompoundButton filterSwitch, pumpSwitch, daySwitch, nightSwitch;
+
+    Map<Integer,String> items = new HashMap<Integer, String>(){{
+        put(1, "Water Filter");
+        put(2, "Air Pump");
+        put(3, "Day Light");
+        put(4, "Night Light");
+    }};
+
+    Map<String, CompoundButton> switches;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +69,26 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
             startActivity(i);
             finish();
         }
+        else
+        {
+            filterSwitch = (CompoundButton)findViewById(R.id.switch1);
+            pumpSwitch = (CompoundButton)findViewById(R.id.switch2);
+            daySwitch = (CompoundButton)findViewById(R.id.switch3);
+            nightSwitch = (CompoundButton)findViewById(R.id.switch4);
+
+            filterSwitch.setOnCheckedChangeListener(this);
+            pumpSwitch.setOnCheckedChangeListener(this);
+            daySwitch.setOnCheckedChangeListener(this);
+            nightSwitch.setOnCheckedChangeListener(this);
+
+            switches = new HashMap<String, CompoundButton>(){{
+                put("1", filterSwitch);
+                put("2", pumpSwitch);
+                put("3", daySwitch);
+                put("4", nightSwitch);
+            }};
+        }
+
     }
 
     @Override
@@ -58,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
 
 
         Log.d(Constants.log, "onResume");
+        prepareForRefresh();
         new CheckConnection(this).execute();
     }
 
@@ -102,12 +142,77 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
         queue.start();
     }
 
+    protected void updateSwitch(String id, String value)
+    {
+        CompoundButton sw = switches.get(id);
+        sw.setOnCheckedChangeListener(null);
+        sw.setEnabled(true);
+        sw.setChecked((value.equals("0") ? true : false));
+        sw.setOnCheckedChangeListener(this);
+    }
+
+
+    protected void switchStatus()
+    {
+      RequestQueue queue = Volley.newRequestQueue(this);
+
+        final JsonArrayRequest request = new JsonArrayRequest(Constants.url_status, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+
+                for(int i = 0; i<response.length(); i++)
+                {
+                    JSONObject obj = null;
+                    try {
+                        obj = response.getJSONObject(i);
+                        updateSwitch(obj.getString("id"), obj.getString("value"));
+                    } catch (JSONException e) {
+                        Log.e(Constants.log, "Switch Status JSONException e: " + e.getMessage());
+                    }
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(Constants.log, "Switch Status Error: " + error.getMessage());
+            }
+        });
+
+        queue.add(request);
+        queue.start();
+    }
+
     protected void loadData()
     {
         waterTemp();
         coreTemps();
+        switchStatus();
     }
 
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+        switch (buttonView.getId())
+        {
+            case R.id.switch1:
+
+                break;
+
+            case R.id.switch2:
+
+                break;
+
+            case R.id.switch3:
+
+                break;
+
+            case R.id.switch4:
+
+                break;
+        }
+
+    }
 
     @Override
     public void processFinish() {
@@ -123,6 +228,13 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
 
     }
 
+    protected void prepareForRefresh()
+    {
+        for (CompoundButton sw : switches.values())
+            sw.setEnabled(false);
+    }
+
+
     public void showOptions(View view) {
 
         PopupMenu popupMenu = new PopupMenu(MainActivity.this, view);
@@ -134,7 +246,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
                 {
                     case R.id.refresh:
                         Log.d(Constants.log, "Refresh");
-
+                        prepareForRefresh();
                         new CheckConnection(MainActivity.this).execute();
 
                         break;
@@ -152,6 +264,8 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
         popupMenu.show();
 
     }
+
+
 
 
     private class CheckConnection extends AsyncTask<String, Void, Void>
