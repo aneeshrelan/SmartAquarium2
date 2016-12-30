@@ -198,14 +198,17 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
                     break;
 
                 case 1:
+                    Constants.domain = localDomain;
+                    Constants.createURL();
                     connection.setImageResource(R.mipmap.ic_local);
                     Toast.makeText(MainActivity.this, "Connected in Local Network", Toast.LENGTH_SHORT).show();
                     delegate.processFinish();
                     break;
 
                 case 2:
+                    Constants.domain = remoteDomain;
+                    Constants.createURL();
                     connection.setImageResource(R.mipmap.ic_internet);
-
                     Toast.makeText(MainActivity.this, "Connected via Remote Server", Toast.LENGTH_SHORT).show();
                     delegate.processFinish();
                     break;
