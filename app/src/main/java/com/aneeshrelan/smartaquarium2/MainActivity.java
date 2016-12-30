@@ -28,7 +28,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AsyncResponse {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +52,12 @@ public class MainActivity extends AppCompatActivity {
 
 
         Log.d(Constants.log, "onResume");
-        new CheckConnection().execute();
+        new CheckConnection(this).execute();
+    }
+
+    @Override
+    public void processFinish() {
+        Log.d(Constants.log, "Finished - Domain: " + Constants.domain);
     }
 
 
@@ -67,6 +72,14 @@ public class MainActivity extends AppCompatActivity {
         Integer flag = 0;
 
         ObjectAnimator anim;
+
+        public AsyncResponse delegate = null;
+
+        public CheckConnection(AsyncResponse delegate)
+        {
+            this.delegate = delegate;
+        }
+
 
         @Override
         protected void onPreExecute() {
@@ -160,6 +173,8 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
+
+
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
@@ -185,17 +200,17 @@ public class MainActivity extends AppCompatActivity {
                 case 1:
                     connection.setImageResource(R.mipmap.ic_local);
                     Toast.makeText(MainActivity.this, "Connected in Local Network", Toast.LENGTH_SHORT).show();
-
+                    delegate.processFinish();
                     break;
 
                 case 2:
                     connection.setImageResource(R.mipmap.ic_internet);
 
                     Toast.makeText(MainActivity.this, "Connected via Remote Server", Toast.LENGTH_SHORT).show();
-
+                    delegate.processFinish();
                     break;
-
             }
+
         }
     }
 
