@@ -258,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
                     }
                 };
 
-                timer.schedule(task, 0,Constants.updateInterval);
+                timer.schedule(task, 0,5000);
             }catch (IllegalStateException e)
             {
                 Log.e(Constants.log, "Timer IllegalStateException e: " + e.getMessage());
