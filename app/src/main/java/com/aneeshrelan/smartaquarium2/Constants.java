@@ -16,6 +16,7 @@ public class Constants {
 
     public static String error_noDomain = "No Domain Settings!";
 
+    public static Integer updateInterval = 5 * 1000;
 
     public static String validConnection = "hello";
 

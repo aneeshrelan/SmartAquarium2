@@ -39,6 +39,8 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -55,6 +57,8 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
     }};
 
     Map<String, CompoundButton> switches;
+
+    Timer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +104,18 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
         Log.d(Constants.log, "onResume");
         prepareForRefresh();
         new CheckConnection(this).execute();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        try
+        {
+            timer.cancel();
+        }catch(Exception e)
+        {
+            Log.e(Constants.log, "onPause Timer Cancel Exception e: " + e.getMessage());
+        }
     }
 
     protected void waterTemp()
@@ -224,7 +240,34 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
 
         if(!Constants.domain.isEmpty())
         {
-            loadData();
+            toggleScheduleButtons(true);
+            //loadData();
+
+            try {
+                timer = new Timer();
+                TimerTask task = new TimerTask() {
+                    @Override
+                    public void run() {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Log.d(Constants.log, "Timer Fired");
+                                loadData();
+                            }
+                        });
+                    }
+                };
+
+                timer.schedule(task, 0,Constants.updateInterval);
+            }catch (IllegalStateException e)
+            {
+                Log.e(Constants.log, "Timer IllegalStateException e: " + e.getMessage());
+            }catch (Exception e)
+            {
+                Log.e(Constants.log, "Timer Exception e: " + e.getMessage());
+            }
+
+
         }
         else
         {
@@ -232,6 +275,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
         }
 
     }
+
 
     protected void disableSwitches()
     {
@@ -257,6 +301,13 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
 
     protected void prepareForRefresh()
     {
+        try
+        {
+            timer.cancel();
+        }catch (Exception e)
+        {
+            Log.e(Constants.log, "Timer Cancel Exception e: " + e.getMessage());
+        }
         disableSwitches();
         zeroTemps();
         toggleScheduleButtons(false);
