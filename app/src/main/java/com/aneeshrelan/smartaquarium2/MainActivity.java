@@ -331,6 +331,14 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
                         break;
 
                     case R.id.settings:
+                        try
+                        {
+                            timer.cancel();
+                        }catch (Exception e)
+                        {
+                            Log.e(Constants.log, "Settings Timer cancel e: " + e.getMessage());
+                        }
+
                         Log.d(Constants.log, "Settings");
                         Intent i = new Intent(MainActivity.this, Settings.class);
                         i.putExtra("goback",true);
