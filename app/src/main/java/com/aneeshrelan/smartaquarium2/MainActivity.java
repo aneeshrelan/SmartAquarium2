@@ -47,7 +47,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-public class MainActivity extends AppCompatActivity implements AsyncResponse, CompoundButton.OnCheckedChangeListener {
+public class MainActivity extends AppCompatActivity implements AsyncResponse, CompoundButton.OnCheckedChangeListener, Button.OnClickListener {
 
     CompoundButton filterSwitch, pumpSwitch, daySwitch, nightSwitch;
 
@@ -61,6 +61,8 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
     Map<String, CompoundButton> switches;
 
     Timer timer;
+
+    Button schedule1, schedule2, schedule3, schedule4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +96,42 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
                 put("3", daySwitch);
                 put("4", nightSwitch);
             }};
+
+
+            schedule1 = (Button)findViewById(R.id.schedule1);
+            schedule2 = (Button)findViewById(R.id.schedule2);
+            schedule3 = (Button)findViewById(R.id.schedule3);
+            schedule4 = (Button)findViewById(R.id.schedule4);
+
+            schedule1.setOnClickListener(this);
+            schedule2.setOnClickListener(this);
+            schedule3.setOnClickListener(this);
+            schedule4.setOnClickListener(this);
+
+        }
+
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId())
+        {
+            case R.id.schedule1:
+
+                break;
+
+            case R.id.schedule2:
+
+                break;
+
+            case R.id.schedule3:
+
+                break;
+
+            case R.id.schedule4:
+
+                break;
         }
 
     }
@@ -267,7 +305,6 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
                 return params;
             }
         };
-
         queue.add(request);
         queue.start();
     }
