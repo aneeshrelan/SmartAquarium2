@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator;
 import android.app.Dialog;
 import android.app.DownloadManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
@@ -11,6 +12,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.SyncStateContract;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
@@ -134,21 +136,32 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
             case R.id.schedule4:
 
                 break;
+
         }
 
     }
 
-    protected void showScheduleDialog(int id) {
+    protected void showScheduleDialog(final int id) {
         switch (id) {
             case 1:
             case 2:
 
-                Dialog dialog = new Dialog(this);
+                final Dialog dialog = new Dialog(this);
                 dialog.setContentView(R.layout.duration);
                 dialog.setTitle(items.get(id) + " Scheduler");
 
                 loadSchedule(id, dialog);
 
+
+                Button confirm = (Button)dialog.findViewById(R.id.confirm);
+                Button delete = (Button)dialog.findViewById(R.id.delete);
+
+                confirm.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        addSchedule(id, dialog);
+                    }
+                });
                 dialog.show();
 
                 break;
@@ -157,6 +170,63 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
             case 4:
 
                 break;
+        }
+    }
+
+    protected void addSchedule(final int id, Dialog dialog)
+    {
+        EditText onDuration, offDuration;
+
+        onDuration = (EditText)dialog.findViewById(R.id.onDuration);
+        offDuration = (EditText)dialog.findViewById(R.id.offDuration);
+
+        String on = onDuration.getText().toString();
+        String off = offDuration.getText().toString();
+
+        if(on.isEmpty() || off.isEmpty())
+        {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Error").setMessage("Empty values not accepted").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+
+            AlertDialog a = builder.create();
+            a.show();
+        }
+        else
+        {
+            RequestQueue queue = Volley.newRequestQueue(this);
+
+            StringRequest request = new StringRequest(Request.Method.POST, Constants.url_addSchedule, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+
+                    if(response.equals(Constants.validToggle))
+                    {
+                        Toast.makeText(MainActivity.this, items.get(id) + " Scheduled", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e(Constants.log, "ID " + id + " AddSchedule Error: " + error.getMessage());
+                }
+            }){
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("id",id + "");
+
+                    return params;
+                }
+            };
+
+            queue.add(request);
+            queue.start();
         }
     }
 
