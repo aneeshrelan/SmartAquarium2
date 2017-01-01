@@ -23,6 +23,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -217,22 +219,57 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
         switch (buttonView.getId())
         {
             case R.id.switch1:
-
+                    toggle("1",isChecked);
                 break;
 
             case R.id.switch2:
-
+                toggle("2",isChecked);
                 break;
 
             case R.id.switch3:
-
+                toggle("3",isChecked);
                 break;
 
             case R.id.switch4:
-
+                toggle("4",isChecked);
                 break;
         }
 
+    }
+
+    protected void toggle(final String id, final boolean value)
+    {
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        StringRequest request = new StringRequest(Request.Method.POST, Constants.url_toggle, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if(response.equals(Constants.validToggle))
+                {
+                    updateSwitch(id, (value) ? "0" : "1");
+                    Toast.makeText(MainActivity.this, items.get(Integer.parseInt(id)) + " Switched " + ((value) ? "ON" : "OFF"), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(Constants.log, "ID " + id + " Toggle Error: " + error.getMessage());
+                updateSwitch(id, (value) ? "1" : "0");
+            }
+        })
+        {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("id", id);
+                params.put("value", (value) ? "0" : "1");
+
+                return params;
+            }
+        };
+
+        queue.add(request);
+        queue.start();
     }
 
     @Override
