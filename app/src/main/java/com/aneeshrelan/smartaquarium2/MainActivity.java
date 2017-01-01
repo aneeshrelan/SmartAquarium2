@@ -216,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
         queue.start();
     }
 
-    protected void addSchedule(final int id, Dialog dialog)
+    protected void addSchedule(final int id, final Dialog dialog)
     {
         EditText onDuration, offDuration;
 
@@ -245,13 +245,21 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
         }
         else
         {
-            Log.d(Constants.log, "Scheduling");
+
 
             request = new StringRequest(Request.Method.POST, Constants.url_addSchedule, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
 
-                    Log.d(Constants.log, response);
+                    if(response.equals(Constants.validToggle))
+                    {
+                        Toast.makeText(MainActivity.this, items.get(id) + " Scheduled", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                    }
+                    else
+                    {
+                        Toast.makeText(MainActivity.this, "Scheduling Error (Already Scheduled)", Toast.LENGTH_SHORT).show();
+                    }
 
                 }
             }, new Response.ErrorListener() {
@@ -269,7 +277,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
                     return params;
                 }
             };
-            Log.d(Constants.log, "Adding");
+
             queue.add(request);
             queue.start();
         }
