@@ -177,7 +177,8 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
 
             case 3:
             case 4:
-
+                Intent i = new Intent(MainActivity.this, Scheduler.class);
+                startActivity(i);
                 break;
         }
     }
@@ -245,8 +246,6 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
         }
         else
         {
-
-
             request = new StringRequest(Request.Method.POST, Constants.url_addSchedule, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
