@@ -5,7 +5,6 @@
     android:id="@+id/activity_pump_scheduler"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
     >
 
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -18,7 +17,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:stretchColumns="0,1"
     android:id="@+id/table"
-    android:animateLayoutChanges="true"
     >
 
     <TableRow
@@ -95,6 +93,7 @@
         android:layout_below="@+id/table"
         android:layout_centerHorizontal="true"
         android:animateLayoutChanges="true"
+
         >
 
         <Button
