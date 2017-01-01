@@ -751,7 +751,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
                     Constants.domain = localDomain;
                     Constants.createURL();
                     connection.setImageResource(R.mipmap.ic_local);
-                    Toast.makeText(MainActivity.this, "Connected in Local Network", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(MainActivity.this, "Connected in Local Network", Toast.LENGTH_SHORT).show();
                     delegate.processFinish();
                     break;
 
@@ -759,7 +759,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
                     Constants.domain = remoteDomain;
                     Constants.createURL();
                     connection.setImageResource(R.mipmap.ic_internet);
-                    Toast.makeText(MainActivity.this, "Connected via Remote Server", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(MainActivity.this, "Connected via Remote Server", Toast.LENGTH_SHORT).show();
                     delegate.processFinish();
                     break;
             }
