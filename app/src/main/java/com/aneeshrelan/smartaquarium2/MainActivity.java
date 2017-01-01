@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
         }
     }
 
-    protected void delSchedule(final int id, Dialog dialog)
+    protected void delSchedule(final int id, final Dialog dialog)
     {
         RequestQueue queue = Volley.newRequestQueue(this);
 
@@ -190,7 +190,11 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
             @Override
             public void onResponse(String response) {
 
-                Log.d(Constants.log, response);
+                if(response.equals(Constants.validToggle))
+                {
+                    Toast.makeText(MainActivity.this, items.get(id) + " Unscheduled", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                }
 
             }
         }, new Response.ErrorListener() {
