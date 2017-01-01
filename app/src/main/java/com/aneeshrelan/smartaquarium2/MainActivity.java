@@ -167,11 +167,11 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
         if (id == 1 || id == 2) {
             final EditText onDuration = (EditText) dialog.findViewById(R.id.onDuration);
             final EditText offDuration = (EditText) dialog.findViewById(R.id.offDuration);
+            final Button confirm = (Button)dialog.findViewById(R.id.confirm);
 
             onDuration.setEnabled(false);
             offDuration.setEnabled(false);
-
-
+            confirm.setEnabled(false);
 
             request = new StringRequest(Request.Method.POST, Constants.url_getSchedule, new Response.Listener<String>() {
                 @Override
@@ -190,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
 
                             onDuration.setEnabled(true);
                             offDuration.setEnabled(true);
-
+                            confirm.setEnabled(true);
 
                             ((Button)dialog.findViewById(R.id.delete)).setVisibility(View.VISIBLE);
                         }
