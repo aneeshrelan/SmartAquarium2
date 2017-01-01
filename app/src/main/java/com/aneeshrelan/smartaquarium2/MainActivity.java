@@ -120,11 +120,11 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
 
         switch (v.getId()) {
             case R.id.schedule1:
-                showDurationDialog(1);
+                showScheduleDialog(1);
                 break;
 
             case R.id.schedule2:
-                showDurationDialog(2);
+                showScheduleDialog(2);
                 break;
 
             case R.id.schedule3:
@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
 
     }
 
-    protected void showDurationDialog(int id) {
+    protected void showScheduleDialog(int id) {
         switch (id) {
             case 1:
             case 2:
@@ -187,6 +187,8 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
                         {
                             onDuration.setText(json.getString("onTime").trim());
                             offDuration.setText(json.getString("offTime").trim());
+
+                            confirm.setText("Modify");
 
                             onDuration.setEnabled(true);
                             offDuration.setEnabled(true);
