@@ -130,11 +130,15 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
                 break;
 
             case R.id.schedule3:
-
+                Intent i = new Intent(MainActivity.this, Scheduler.class);
+                i.putExtra("id",3);
+                startActivity(i);
                 break;
 
             case R.id.schedule4:
-
+                i = new Intent(MainActivity.this, Scheduler.class);
+                i.putExtra("id",4);
+                startActivity(i);
                 break;
 
         }
@@ -173,12 +177,6 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
 
                 dialog.show();
 
-                break;
-
-            case 3:
-            case 4:
-                Intent i = new Intent(MainActivity.this, Scheduler.class);
-                startActivity(i);
                 break;
         }
     }
