@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/onDurationText"
-            android:layout_gravity="center"
+            android:layout_gravity="center|end"
             android:textSize="17sp" />
 
         <EditText
@@ -37,7 +37,7 @@
             android:inputType="number"
             android:ems="10"
             android:id="@+id/onDuration"
-            android:layout_gravity="center|end"
+            android:layout_gravity="center"
             android:maxLength="2"
             android:layout_width="10dp"
             tools:ignore="LabelFor" />
@@ -46,7 +46,7 @@
             android:text="@string/minutes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center|end"
+            android:layout_gravity="center|start"
             android:id="@+id/onMinutesText"
             android:textSize="17sp" />
 
@@ -62,7 +62,7 @@
             android:text="@string/off_duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_gravity="center|end"
             android:textSize="17sp" />
 
         <EditText
@@ -70,7 +70,7 @@
             android:inputType="number"
             android:ems="10"
             android:id="@+id/offDuration"
-            android:layout_gravity="center|end"
+            android:layout_gravity="center"
             android:layout_width="10dp"
             tools:ignore="LabelFor"
             android:maxLength="2" />
@@ -80,7 +80,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/offMinutesText"
-            android:layout_gravity="center|end"
+            android:layout_gravity="center|start"
             android:textSize="17sp" />
 
     </TableRow>
@@ -104,7 +104,7 @@
 
             android:textSize="17sp"
             android:layout_weight="1"
-            />
+            tools:ignore="ButtonStyle" />
 
         <Button
             android:text="@string/delete"
@@ -114,7 +114,8 @@
 
             android:textSize="17sp"
             android:layout_weight="1"
-            android:visibility="gone" />
+            android:visibility="gone"
+            tools:ignore="ButtonStyle" />
     </LinearLayout>
 
 </RelativeLayout>
