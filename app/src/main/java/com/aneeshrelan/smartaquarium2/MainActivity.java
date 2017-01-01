@@ -183,6 +183,10 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
         String on = onDuration.getText().toString();
         String off = offDuration.getText().toString();
 
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        StringRequest request = null;
+
         if(on.isEmpty() || off.isEmpty())
         {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -198,16 +202,13 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
         }
         else
         {
-            RequestQueue queue = Volley.newRequestQueue(this);
+            Log.d(Constants.log, "Scheduling");
 
-            StringRequest request = new StringRequest(Request.Method.POST, Constants.url_addSchedule, new Response.Listener<String>() {
+            request = new StringRequest(Request.Method.POST, Constants.url_addSchedule, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
 
-                    if(response.equals(Constants.validToggle))
-                    {
-                        Toast.makeText(MainActivity.this, items.get(id) + " Scheduled", Toast.LENGTH_SHORT).show();
-                    }
+                    Log.d(Constants.log, response);
 
                 }
             }, new Response.ErrorListener() {
@@ -219,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
                 @Override
                 protected Map<String, String> getParams() throws AuthFailureError {
                     Map<String, String> params = new HashMap<>();
-                    params.put("id",id + "");
+                    params.put("id",id +"");
 
                     return params;
                 }
@@ -266,6 +267,12 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
 
                             ((Button)dialog.findViewById(R.id.delete)).setVisibility(View.VISIBLE);
                         }
+                        else
+                        {
+                            onDuration.setEnabled(true);
+                            offDuration.setEnabled(true);
+                            confirm.setEnabled(true);
+                        }
 
                     } catch (JSONException e) {
                         Log.e(Constants.log, "ID " + id + " JSONException e: " + e.getMessage());
@@ -286,11 +293,10 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
                     return params;
                 }
             };
-
+            queue.add(request);
+            queue.start();
         }
 
-        queue.add(request);
-        queue.start();
     }
 
     @Override
