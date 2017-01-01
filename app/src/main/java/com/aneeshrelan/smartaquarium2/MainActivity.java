@@ -223,8 +223,8 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
         onDuration = (EditText)dialog.findViewById(R.id.onDuration);
         offDuration = (EditText)dialog.findViewById(R.id.offDuration);
 
-        String on = onDuration.getText().toString();
-        String off = offDuration.getText().toString();
+        final String on = onDuration.getText().toString();
+        final String off = offDuration.getText().toString();
 
         RequestQueue queue = Volley.newRequestQueue(this);
 
@@ -264,7 +264,8 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
                 protected Map<String, String> getParams() throws AuthFailureError {
                     Map<String, String> params = new HashMap<>();
                     params.put("id",id +"");
-
+                    params.put("onTime", on);
+                    params.put("offTime", off);
                     return params;
                 }
             };
