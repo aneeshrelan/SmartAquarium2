@@ -1,6 +1,7 @@
 package com.aneeshrelan.smartaquarium2;
 
 import android.animation.ObjectAnimator;
+import android.app.Dialog;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +20,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +31,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -118,11 +121,11 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
         switch (v.getId())
         {
             case R.id.schedule1:
-
+                showDurationDialog(1);
                 break;
 
             case R.id.schedule2:
-
+                showDurationDialog(2);
                 break;
 
             case R.id.schedule3:
@@ -134,6 +137,71 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
                 break;
         }
 
+    }
+
+    protected void showDurationDialog(int id)
+    {
+        switch (id)
+        {
+            case 1:
+            case 2:
+
+                Dialog dialog = new Dialog(this);
+                dialog.setContentView(R.layout.duration);
+                dialog.setTitle(items.get(id) + " Scheduler");
+
+                loadSchedule(id, dialog);
+
+                dialog.show();
+
+                break;
+
+            case 3:
+            case 4:
+
+                break;
+        }
+    }
+
+
+    protected void loadSchedule(final int id, Dialog dialog)
+    {
+        RequestQueue queue = Volley.newRequestQueue(this);
+        JsonObjectRequest request = null;
+        if(id == 1 || id == 2)
+        {
+            final EditText onDuration = (EditText)dialog.findViewById(R.id.onDuration);
+            EditText offDuration = (EditText)dialog.findViewById(R.id.offDuration);
+
+            onDuration.setEnabled(false);
+            offDuration.setEnabled(false);
+
+            request = new JsonObjectRequest(Request.Method.POST, Constants.url_getSchedule, null, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+
+                    Log.d(Constants.log, response.keys().toString());
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e(Constants.log, "ID " + id + " GetSchedule Error: " + error.getMessage());
+                }
+            }){
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("id", id + "");
+
+                    return params;
+                }
+            };
+
+        }
+
+        queue.add(request);
+        queue.start();
     }
 
     @Override
