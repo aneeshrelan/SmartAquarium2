@@ -11,8 +11,8 @@
     tools:context="com.aneeshrelan.smartaquarium2.MainActivity">
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         app:srcCompat="@mipmap/ic_back"
         android:id="@+id/goback"
         android:layout_alignParentTop="true"
