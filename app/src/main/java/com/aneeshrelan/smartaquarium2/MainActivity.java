@@ -162,6 +162,15 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
                         addSchedule(id, dialog);
                     }
                 });
+
+
+                delete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        delSchedule(id, dialog);
+                    }
+                });
+
                 dialog.show();
 
                 break;
@@ -171,6 +180,36 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
 
                 break;
         }
+    }
+
+    protected void delSchedule(final int id, Dialog dialog)
+    {
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        StringRequest request = new StringRequest(Request.Method.POST, Constants.url_delSchedule, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                Log.d(Constants.log, response);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(Constants.log, "ID " + id + " DelSchedule Error: " + error.getMessage());
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("id", id + "");
+
+                return params;
+            }
+        };
+
+        queue.add(request);
+        queue.start();
     }
 
     protected void addSchedule(final int id, Dialog dialog)
@@ -225,7 +264,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
                     return params;
                 }
             };
-
+            Log.d(Constants.log, "Adding");
             queue.add(request);
             queue.start();
         }
@@ -293,10 +332,10 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
                     return params;
                 }
             };
-            queue.add(request);
-            queue.start();
-        }
 
+        }
+        queue.add(request);
+        queue.start();
     }
 
     @Override
@@ -475,7 +514,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Log.d(Constants.log, "Timer Fired");
+//                                Log.d(Constants.log, "Timer Fired");
                                 loadData();
                             }
                         });
