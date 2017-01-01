@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.SyncStateContract;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +23,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
 
     CompoundButton filterSwitch, pumpSwitch, daySwitch, nightSwitch;
 
-    Map<Integer,String> items = new HashMap<Integer, String>(){{
+    Map<Integer, String> items = new HashMap<Integer, String>() {{
         put(1, "Water Filter");
         put(2, "Air Pump");
         put(3, "Day Light");
@@ -75,25 +77,22 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
 
         SharedPreferences sp = getSharedPreferences(Constants.PREF_NAME, MODE_PRIVATE);
 
-        if(sp.getString(Constants.key_domain_local,"").isEmpty() && sp.getString(Constants.key_domain_remote,"").isEmpty())
-        {
+        if (sp.getString(Constants.key_domain_local, "").isEmpty() && sp.getString(Constants.key_domain_remote, "").isEmpty()) {
             Intent i = new Intent(MainActivity.this, Settings.class);
             startActivity(i);
             finish();
-        }
-        else
-        {
-            filterSwitch = (CompoundButton)findViewById(R.id.switch1);
-            pumpSwitch = (CompoundButton)findViewById(R.id.switch2);
-            daySwitch = (CompoundButton)findViewById(R.id.switch3);
-            nightSwitch = (CompoundButton)findViewById(R.id.switch4);
+        } else {
+            filterSwitch = (CompoundButton) findViewById(R.id.switch1);
+            pumpSwitch = (CompoundButton) findViewById(R.id.switch2);
+            daySwitch = (CompoundButton) findViewById(R.id.switch3);
+            nightSwitch = (CompoundButton) findViewById(R.id.switch4);
 
             filterSwitch.setOnCheckedChangeListener(this);
             pumpSwitch.setOnCheckedChangeListener(this);
             daySwitch.setOnCheckedChangeListener(this);
             nightSwitch.setOnCheckedChangeListener(this);
 
-            switches = new HashMap<String, CompoundButton>(){{
+            switches = new HashMap<String, CompoundButton>() {{
                 put("1", filterSwitch);
                 put("2", pumpSwitch);
                 put("3", daySwitch);
@@ -101,10 +100,10 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
             }};
 
 
-            schedule1 = (Button)findViewById(R.id.schedule1);
-            schedule2 = (Button)findViewById(R.id.schedule2);
-            schedule3 = (Button)findViewById(R.id.schedule3);
-            schedule4 = (Button)findViewById(R.id.schedule4);
+            schedule1 = (Button) findViewById(R.id.schedule1);
+            schedule2 = (Button) findViewById(R.id.schedule2);
+            schedule3 = (Button) findViewById(R.id.schedule3);
+            schedule4 = (Button) findViewById(R.id.schedule4);
 
             schedule1.setOnClickListener(this);
             schedule2.setOnClickListener(this);
@@ -113,13 +112,13 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
 
         }
 
+
     }
 
     @Override
     public void onClick(View v) {
 
-        switch (v.getId())
-        {
+        switch (v.getId()) {
             case R.id.schedule1:
                 showDurationDialog(1);
                 break;
@@ -139,10 +138,8 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
 
     }
 
-    protected void showDurationDialog(int id)
-    {
-        switch (id)
-        {
+    protected void showDurationDialog(int id) {
+        switch (id) {
             case 1:
             case 2:
 
@@ -164,23 +161,43 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
     }
 
 
-    protected void loadSchedule(final int id, Dialog dialog)
-    {
+    protected void loadSchedule(final int id, final Dialog dialog) {
         RequestQueue queue = Volley.newRequestQueue(this);
-        JsonObjectRequest request = null;
-        if(id == 1 || id == 2)
-        {
-            final EditText onDuration = (EditText)dialog.findViewById(R.id.onDuration);
-            EditText offDuration = (EditText)dialog.findViewById(R.id.offDuration);
+        StringRequest request = null;
+        if (id == 1 || id == 2) {
+            final EditText onDuration = (EditText) dialog.findViewById(R.id.onDuration);
+            final EditText offDuration = (EditText) dialog.findViewById(R.id.offDuration);
 
             onDuration.setEnabled(false);
             offDuration.setEnabled(false);
 
-            request = new JsonObjectRequest(Request.Method.POST, Constants.url_getSchedule, null, new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
 
-                    Log.d(Constants.log, response.keys().toString());
+
+            request = new StringRequest(Request.Method.POST, Constants.url_getSchedule, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+
+                    JSONObject json = null;
+
+                    try {
+
+                        json = new JSONObject(response);
+
+                        if(json.getString("isScheduled").equals("1"))
+                        {
+                            onDuration.setText(json.getString("onTime").trim());
+                            offDuration.setText(json.getString("offTime").trim());
+
+                            onDuration.setEnabled(true);
+                            offDuration.setEnabled(true);
+
+
+                            ((Button)dialog.findViewById(R.id.delete)).setVisibility(View.VISIBLE);
+                        }
+
+                    } catch (JSONException e) {
+                        Log.e(Constants.log, "ID " + id + " JSONException e: " + e.getMessage());
+                    }
 
                 }
             }, new Response.ErrorListener() {
@@ -188,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
                 public void onErrorResponse(VolleyError error) {
                     Log.e(Constants.log, "ID " + id + " GetSchedule Error: " + error.getMessage());
                 }
-            }){
+            }) {
                 @Override
                 protected Map<String, String> getParams() throws AuthFailureError {
                     Map<String, String> params = new HashMap<>();
@@ -217,24 +234,21 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
     @Override
     protected void onPause() {
         super.onPause();
-        try
-        {
+        try {
             timer.cancel();
-        }catch(Exception e)
-        {
+        } catch (Exception e) {
             Log.e(Constants.log, "onPause Timer Cancel Exception e: " + e.getMessage());
         }
     }
 
-    protected void waterTemp()
-    {
+    protected void waterTemp() {
         RequestQueue queue = Volley.newRequestQueue(this);
 
         StringRequest request = new StringRequest(Constants.url_temp, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                ((TextView)findViewById(R.id.waterTemp)).setEnabled(true);
-                ((TextView)findViewById(R.id.waterTemp)).setText(response.trim() + " °C");
+                ((TextView) findViewById(R.id.waterTemp)).setEnabled(true);
+                ((TextView) findViewById(R.id.waterTemp)).setText(response.trim() + " °C");
             }
         }, new Response.ErrorListener() {
             @Override
@@ -247,18 +261,17 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
         queue.start();
     }
 
-    protected void coreTemps()
-    {
+    protected void coreTemps() {
         RequestQueue queue = Volley.newRequestQueue(this);
 
         StringRequest request = new StringRequest(Constants.url_coreTemps, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                ((TextView)findViewById(R.id.gpuTemp)).setEnabled(true);
-                ((TextView)findViewById(R.id.cpuTemp)).setEnabled(true);
+                ((TextView) findViewById(R.id.gpuTemp)).setEnabled(true);
+                ((TextView) findViewById(R.id.cpuTemp)).setEnabled(true);
 
-                ((TextView)findViewById(R.id.gpuTemp)).setText(response.split(",")[0].trim() + "  °C");
-                ((TextView)findViewById(R.id.cpuTemp)).setText(response.split(",")[1].trim() + "  °C");
+                ((TextView) findViewById(R.id.gpuTemp)).setText(response.split(",")[0].trim() + "  °C");
+                ((TextView) findViewById(R.id.cpuTemp)).setText(response.split(",")[1].trim() + "  °C");
             }
         }, new Response.ErrorListener() {
             @Override
@@ -271,8 +284,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
         queue.start();
     }
 
-    protected void updateSwitch(String id, String value)
-    {
+    protected void updateSwitch(String id, String value) {
         CompoundButton sw = switches.get(id);
         sw.setOnCheckedChangeListener(null);
         sw.setEnabled(true);
@@ -281,16 +293,14 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
     }
 
 
-    protected void switchStatus()
-    {
-      RequestQueue queue = Volley.newRequestQueue(this);
+    protected void switchStatus() {
+        RequestQueue queue = Volley.newRequestQueue(this);
 
         final JsonArrayRequest request = new JsonArrayRequest(Constants.url_status, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
 
-                for(int i = 0; i<response.length(); i++)
-                {
+                for (int i = 0; i < response.length(); i++) {
                     JSONObject obj = null;
                     try {
                         obj = response.getJSONObject(i);
@@ -312,8 +322,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
         queue.start();
     }
 
-    protected void loadData()
-    {
+    protected void loadData() {
         waterTemp();
         coreTemps();
         switchStatus();
@@ -322,36 +331,33 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-        switch (buttonView.getId())
-        {
+        switch (buttonView.getId()) {
             case R.id.switch1:
-                    toggle("1",isChecked);
+                toggle("1", isChecked);
                 break;
 
             case R.id.switch2:
-                toggle("2",isChecked);
+                toggle("2", isChecked);
                 break;
 
             case R.id.switch3:
-                toggle("3",isChecked);
+                toggle("3", isChecked);
                 break;
 
             case R.id.switch4:
-                toggle("4",isChecked);
+                toggle("4", isChecked);
                 break;
         }
 
     }
 
-    protected void toggle(final String id, final boolean value)
-    {
+    protected void toggle(final String id, final boolean value) {
         RequestQueue queue = Volley.newRequestQueue(this);
 
         StringRequest request = new StringRequest(Request.Method.POST, Constants.url_toggle, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                if(response.equals(Constants.validToggle))
-                {
+                if (response.equals(Constants.validToggle)) {
                     updateSwitch(id, (value) ? "0" : "1");
                     Toast.makeText(MainActivity.this, items.get(Integer.parseInt(id)) + " Switched " + ((value) ? "ON" : "OFF"), Toast.LENGTH_SHORT).show();
                 }
@@ -362,8 +368,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
                 Log.e(Constants.log, "ID " + id + " Toggle Error: " + error.getMessage());
                 updateSwitch(id, (value) ? "1" : "0");
             }
-        })
-        {
+        }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
@@ -380,8 +385,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
     @Override
     public void processFinish() {
 
-        if(!Constants.domain.isEmpty())
-        {
+        if (!Constants.domain.isEmpty()) {
             toggleScheduleButtons(true);
             //loadData();
 
@@ -401,53 +405,43 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
                 };
 
                 timer.schedule(task, 0, Constants.updateInterval);
-            }catch (IllegalStateException e)
-            {
+            } catch (IllegalStateException e) {
                 Log.e(Constants.log, "Timer IllegalStateException e: " + e.getMessage());
-            }catch (Exception e)
-            {
+            } catch (Exception e) {
                 Log.e(Constants.log, "Timer Exception e: " + e.getMessage());
             }
 
 
-        }
-        else
-        {
+        } else {
             Log.e(Constants.log, "Empty Domain");
         }
 
     }
 
 
-    protected void disableSwitches()
-    {
+    protected void disableSwitches() {
         for (CompoundButton sw : switches.values())
             sw.setEnabled(false);
     }
 
-    protected void zeroTemps()
-    {
-        ((TextView)findViewById(R.id.waterTemp)).setEnabled(false);
-        ((TextView)findViewById(R.id.gpuTemp)).setEnabled(false);
-        ((TextView)findViewById(R.id.cpuTemp)).setEnabled(false);
+    protected void zeroTemps() {
+        ((TextView) findViewById(R.id.waterTemp)).setEnabled(false);
+        ((TextView) findViewById(R.id.gpuTemp)).setEnabled(false);
+        ((TextView) findViewById(R.id.cpuTemp)).setEnabled(false);
     }
 
-    protected void toggleScheduleButtons(Boolean state)
-    {
-        ((Button)findViewById(R.id.schedule1)).setEnabled(state);
-        ((Button)findViewById(R.id.schedule2)).setEnabled(state);
-        ((Button)findViewById(R.id.schedule3)).setEnabled(state);
-        ((Button)findViewById(R.id.schedule4)).setEnabled(state);
+    protected void toggleScheduleButtons(Boolean state) {
+        ((Button) findViewById(R.id.schedule1)).setEnabled(state);
+        ((Button) findViewById(R.id.schedule2)).setEnabled(state);
+        ((Button) findViewById(R.id.schedule3)).setEnabled(state);
+        ((Button) findViewById(R.id.schedule4)).setEnabled(state);
     }
 
 
-    protected void prepareForRefresh()
-    {
-        try
-        {
+    protected void prepareForRefresh() {
+        try {
             timer.cancel();
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.e(Constants.log, "Timer Cancel Exception e: " + e.getMessage());
         }
         disableSwitches();
@@ -463,8 +457,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                switch(item.getItemId())
-                {
+                switch (item.getItemId()) {
                     case R.id.refresh:
                         Log.d(Constants.log, "Refresh");
                         prepareForRefresh();
@@ -473,17 +466,15 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
                         break;
 
                     case R.id.settings:
-                        try
-                        {
+                        try {
                             timer.cancel();
-                        }catch (Exception e)
-                        {
+                        } catch (Exception e) {
                             Log.e(Constants.log, "Settings Timer cancel e: " + e.getMessage());
                         }
 
                         Log.d(Constants.log, "Settings");
                         Intent i = new Intent(MainActivity.this, Settings.class);
-                        i.putExtra("goback",true);
+                        i.putExtra("goback", true);
                         startActivity(i);
                 }
                 return true;
@@ -497,8 +488,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
 
 
 
-    private class CheckConnection extends AsyncTask<String, Void, Void>
-    {
+    private class CheckConnection extends AsyncTask<String, Void, Void> {
 
         String localDomain;
         String remoteDomain;
@@ -511,8 +501,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
 
         public AsyncResponse delegate = null;
 
-        public CheckConnection(AsyncResponse delegate)
-        {
+        public CheckConnection(AsyncResponse delegate) {
             this.delegate = delegate;
         }
 
@@ -523,13 +512,13 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
 
             SharedPreferences sp = getSharedPreferences(Constants.PREF_NAME, MainActivity.this.MODE_PRIVATE);
 
-            localDomain = sp.getString(Constants.key_domain_local,"");
-            remoteDomain = sp.getString(Constants.key_domain_remote,"");
+            localDomain = sp.getString(Constants.key_domain_local, "");
+            remoteDomain = sp.getString(Constants.key_domain_remote, "");
 
-            connection = (ImageView)MainActivity.this.findViewById(R.id.connection);
+            connection = (ImageView) MainActivity.this.findViewById(R.id.connection);
             connection.setImageResource(R.mipmap.ic_connecting);
 
-            anim = ObjectAnimator.ofFloat(connection,"rotationY",0.0f, 360f);
+            anim = ObjectAnimator.ofFloat(connection, "rotationY", 0.0f, 360f);
             anim.setDuration(1000);
             anim.setRepeatCount(Animation.INFINITE);
             anim.setInterpolator(new AccelerateDecelerateInterpolator());
@@ -542,11 +531,10 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
         @Override
         protected Void doInBackground(String... params) {
 
-           ConnectivityManager mgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+            ConnectivityManager mgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo info = mgr.getActiveNetworkInfo();
 
-            if(info == null)
-            {
+            if (info == null) {
                 flag = -1;
                 return null;
             }
@@ -557,7 +545,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
             StringRequest localRequest = new StringRequest(localDomain, future, future);
 
             queue.add(localRequest);
-            if(!localDomain.isEmpty()) {
+            if (!localDomain.isEmpty()) {
                 try {
                     if (InetAddress.getByName(localDomain.substring(7, localDomain.lastIndexOf(':'))).isReachable(1000)) {
                         String localResponse = future.get(3, TimeUnit.SECONDS);
@@ -578,7 +566,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
                 }
             }
 
-            if(!remoteDomain.isEmpty()) {
+            if (!remoteDomain.isEmpty()) {
                 queue = Volley.newRequestQueue(MainActivity.this);
                 future = RequestFuture.newFuture();
 
@@ -610,7 +598,6 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
         }
 
 
-
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
@@ -619,8 +606,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
 
             Log.d(Constants.log, flag + "");
 
-            switch (flag)
-            {
+            switch (flag) {
                 case -1:
                     connection.setImageResource(R.mipmap.ic_no);
                     Toast.makeText(MainActivity.this, "No Network Connection", Toast.LENGTH_SHORT).show();
