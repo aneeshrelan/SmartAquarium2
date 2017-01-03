@@ -3,9 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="12dp"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:orientation="vertical"
+    android:layout_marginBottom="10dp">
 
     <TextView
         android:text="@string/schedule_1"
@@ -25,47 +26,68 @@
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent"
+            android:id="@+id/onRow">
 
             <TextView
                 android:text="@string/on_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView37"
+                android:id="@+id/onTimeLabel"
                 android:textSize="20sp"
-                android:textAlignment="textEnd" />
+                android:textAlignment="textEnd"
+                android:labelFor="@+id/editScheduleOn" />
 
             <TextView
                 android:text="@string/defaultOn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView38"
+                android:id="@+id/scheduleOn"
                 android:textSize="28sp"
                 android:textAlignment="center"
                 android:layout_marginStart="20dp" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:id="@+id/editOnTime"
+                android:textSize="28sp"
+                android:textAlignment="center"
+                tools:ignore="LabelFor" />
         </TableRow>
 
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="15dp">
+            android:id="@+id/offRow">
 
             <TextView
                 android:text="@string/off_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView39"
+                android:id="@+id/offTimeLabel"
                 android:textSize="20sp"
-                android:textAlignment="textEnd" />
+                android:textAlignment="textEnd"
+                android:labelFor="@+id/editScheduleOff" />
 
             <TextView
                 android:text="@string/defaultOff"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView40"
+                android:id="@+id/scheduleOff"
                 android:textSize="28sp"
                 android:textAlignment="center"
                 android:layout_marginStart="20dp" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:id="@+id/editOffTime"
+                android:textSize="28sp"
+                android:textAlignment="center"
+                tools:ignore="LabelFor" />
         </TableRow>
     </TableLayout>
 
@@ -75,7 +97,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/scheduleTable"
-        android:layout_marginTop="15dp">
+        android:layout_marginTop="10dp">
 
         <Button
             android:text="@string/modify"
