@@ -23,5 +23,31 @@
         android:layout_height="35dp"
         android:onClick="goback"/>
 
+    <ImageView
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        app:srcCompat="@mipmap/ic_new_schedule"
+        android:id="@+id/addSchedule"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:contentDescription="@string/add_schedule"
+        android:hapticFeedbackEnabled="true"
+        android:visibility="gone" />
+
+    <TextView
+        android:text="@string/no_schedule"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/noScheduleMsg"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:textSize="18sp"
+        android:visibility="gone" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/scheduleList" />
+
 
 </RelativeLayout>
