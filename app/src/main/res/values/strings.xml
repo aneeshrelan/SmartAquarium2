@@ -31,5 +31,11 @@
     <string name="delete">Delete</string>
     <string name="refresh">Refresh</string>
     <string name="string_refresh" />
+    <string name="defaultOn">18:00</string>
+    <string name="modify">Modify</string>
+    <string name="off_time">OFF Time:</string>
+    <string name="on_time">ON Time:</string>
+    <string name="schedule_1">Schedule #1</string>
+    <string name="defaultOff">6:00</string>
 </resources>
 

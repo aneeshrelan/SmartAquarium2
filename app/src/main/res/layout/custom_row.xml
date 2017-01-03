@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="12dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:text="@string/schedule_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/scheduleHeading"
+        android:layout_centerHorizontal="true"
+        android:textSize="22sp" />
+
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/scheduleHeading"
+        android:layout_marginTop="15dp"
+        android:id="@+id/scheduleTable">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:text="@string/on_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView37"
+                android:textSize="20sp"
+                android:textAlignment="textEnd" />
+
+            <TextView
+                android:text="@string/defaultOn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView38"
+                android:textSize="28sp"
+                android:textAlignment="center"
+                android:layout_marginStart="20dp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="15dp">
+
+            <TextView
+                android:text="@string/off_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView39"
+                android:textSize="20sp"
+                android:textAlignment="textEnd" />
+
+            <TextView
+                android:text="@string/defaultOff"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView40"
+                android:textSize="28sp"
+                android:textAlignment="center"
+                android:layout_marginStart="20dp" />
+        </TableRow>
+    </TableLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/scheduleTable"
+        android:layout_marginTop="15dp">
+
+        <Button
+            android:text="@string/modify"
+            android:id="@+id/button11"
+            android:layout_weight="1"
+            android:textSize="18sp"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            tools:ignore="ButtonStyle" />
+
+        <Button
+            android:text="@string/delete"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:id="@+id/button12"
+            android:layout_weight="1"
+            android:textSize="18sp"
+            tools:ignore="ButtonStyle" />
+    </LinearLayout>
+
+</RelativeLayout>
