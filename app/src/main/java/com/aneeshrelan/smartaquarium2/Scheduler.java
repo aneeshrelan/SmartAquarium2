@@ -40,6 +40,7 @@ public class Scheduler extends AppCompatActivity implements LoadScheduleResponse
     private static CustomAdapter adapter;
 
     ImageView goback;
+    ImageView add;
 
     private static Integer id;
 
@@ -50,6 +51,8 @@ public class Scheduler extends AppCompatActivity implements LoadScheduleResponse
 
         listView = (ListView)findViewById(R.id.scheduleList);
         goback = (ImageView)findViewById(R.id.goback);
+        add = (ImageView)findViewById(R.id.addSchedule);
+        add.setEnabled(true);
         goback.bringToFront();
 
         dataModel = new ArrayList<>();
@@ -78,6 +81,8 @@ public class Scheduler extends AppCompatActivity implements LoadScheduleResponse
 
     @Override
     public void processFinish(JSONObject result) {
+
+        add.setEnabled(true);
 
       if(result != null)
       {

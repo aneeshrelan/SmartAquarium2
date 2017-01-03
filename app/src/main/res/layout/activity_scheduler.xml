@@ -32,7 +32,7 @@
         android:layout_alignParentEnd="true"
         android:contentDescription="@string/add_schedule"
         android:hapticFeedbackEnabled="true"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
     <TextView
         android:text="@string/no_schedule"
