@@ -621,6 +621,8 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
                             Log.e(Constants.log, "Settings Timer cancel e: " + e.getMessage());
                         }
 
+                        i = new Intent(MainActivity.this, NotificationSettings.class);
+                        startActivity(i);
 
 
                 }
