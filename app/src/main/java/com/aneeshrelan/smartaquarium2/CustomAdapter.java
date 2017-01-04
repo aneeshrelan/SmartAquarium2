@@ -43,8 +43,7 @@ class CustomAdapter extends ArrayAdapter<ScheduleData> {
         TextView offTime;
         TextView scheduleID;
 
-        
-        Button modify;
+
         Button delete;
 
         ProgressBar deleteSpinner;
@@ -80,7 +79,7 @@ class CustomAdapter extends ArrayAdapter<ScheduleData> {
             viewHolder.onTime = (TextView)convertView.findViewById(R.id.scheduleOn);
             viewHolder.offTime = (TextView)convertView.findViewById(R.id.scheduleOff);
             viewHolder.scheduleID = (TextView)convertView.findViewById(R.id.scheduleID);
-            viewHolder.modify = (Button)convertView.findViewById(R.id.modifySchedule);
+
             viewHolder.delete = (Button)convertView.findViewById(R.id.deleteSchedule); 
             viewHolder.deleteSpinner = (ProgressBar)convertView.findViewById(R.id.deleteLoad);
 
@@ -110,7 +109,6 @@ class CustomAdapter extends ArrayAdapter<ScheduleData> {
                     public void onClick(DialogInterface dialog, int which) {
 
                         viewHolder.deleteSpinner.setVisibility(View.VISIBLE);
-                        viewHolder.modify.setEnabled(false);
                         viewHolder.delete.setEnabled(false);
 
                         ((Scheduler)context).deleteSchedule(scheduleID, lightID);

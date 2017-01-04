@@ -91,15 +91,6 @@
         android:layout_marginTop="10dp">
 
         <Button
-            android:text="@string/modify"
-            android:id="@+id/modifySchedule"
-            android:layout_weight="1"
-            android:textSize="18sp"
-            android:layout_width="100dp"
-            android:layout_height="50dp"
-            tools:ignore="ButtonStyle" />
-
-        <Button
             android:text="@string/delete"
             android:layout_width="100dp"
             android:layout_height="50dp"
