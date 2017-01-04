@@ -1,6 +1,8 @@
 package com.aneeshrelan.smartaquarium2;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,9 +10,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -27,6 +31,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,8 +57,10 @@ public class Scheduler extends AppCompatActivity implements LoadScheduleResponse
         listView = (ListView)findViewById(R.id.scheduleList);
         goback = (ImageView)findViewById(R.id.goback);
         add = (ImageView)findViewById(R.id.addSchedule);
+
         add.setEnabled(true);
         goback.bringToFront();
+        add.bringToFront();
 
 
 
@@ -113,10 +120,51 @@ public class Scheduler extends AppCompatActivity implements LoadScheduleResponse
 
     }
 
-    public void addSchedule(View view) {
+    protected void addSchedule(View v)
+    {
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.schedule);
 
+        Button setOnTime = (Button)dialog.findViewById(R.id.onSetTime);
+        Button setOffTime = (Button)dialog.findViewById(R.id.offSetTime);
 
+        final Calendar dateAndTime = Calendar.getInstance();
 
+        setOnTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new TimePickerDialog(Scheduler.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        TextView onTime = (TextView)dialog.findViewById(R.id.onTimeValue);
+                        onTime.setText(new StringBuilder().append(pad(hourOfDay)).append(":").append(pad(minute)));
+
+                    }
+                }, dateAndTime.get(Calendar.HOUR_OF_DAY), dateAndTime.get(Calendar.MINUTE),true).show();
+            }
+        });
+
+        setOffTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new TimePickerDialog(Scheduler.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        TextView offTime = (TextView)dialog.findViewById(R.id.offTimeValue);
+                        offTime.setText(new StringBuilder().append(pad(hourOfDay)).append(":").append(pad(minute)));
+
+                    }
+                }, dateAndTime.get(Calendar.HOUR_OF_DAY), dateAndTime.get(Calendar.MINUTE),true).show();
+            }
+        });
+
+    }
+
+    protected String pad(int c){
+        if(c >= 10)
+            return String.valueOf(c);
+        else
+            return "0" + String.valueOf(c);
     }
 
 

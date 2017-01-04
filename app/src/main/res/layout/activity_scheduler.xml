@@ -33,7 +33,7 @@
         android:contentDescription="@string/add_schedule"
         android:hapticFeedbackEnabled="true"
         android:visibility="visible"
-        android:onClick="addSchedule"/>
+        android:onClick="addSchedule" />
 
     <TextView
         android:text="@string/no_schedule"
