@@ -55,6 +55,8 @@ public class Scheduler extends AppCompatActivity implements LoadScheduleResponse
     ImageView goback;
     ImageView add;
 
+    TextView heading;
+
     private static Integer id;
 
     @Override
@@ -65,6 +67,9 @@ public class Scheduler extends AppCompatActivity implements LoadScheduleResponse
         listView = (ListView)findViewById(R.id.scheduleList);
         goback = (ImageView)findViewById(R.id.goback);
         add = (ImageView)findViewById(R.id.addSchedule);
+        heading = (TextView)findViewById(R.id.lightScheduleHeading);
+
+        heading.setText(getIntent().getStringExtra("name") + " Scheduler");
 
         add.setEnabled(true);
         goback.bringToFront();

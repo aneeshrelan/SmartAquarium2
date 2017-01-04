@@ -132,12 +132,14 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
             case R.id.schedule3:
                 Intent i = new Intent(MainActivity.this, Scheduler.class);
                 i.putExtra("id",3);
+                i.putExtra("name",items.get(3));
                 startActivity(i);
                 break;
 
             case R.id.schedule4:
                 i = new Intent(MainActivity.this, Scheduler.class);
                 i.putExtra("id",4);
+                i.putExtra("name",items.get(4));
                 startActivity(i);
 
                 break;

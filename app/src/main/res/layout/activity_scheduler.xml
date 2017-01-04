@@ -36,6 +36,26 @@
         android:onClick="addSchedule" />
 
     <TextView
+        android:text="Light Schedule Settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/lightScheduleHeading"
+        android:textAlignment="center"
+        android:layout_centerHorizontal="true"
+        android:textSize="18sp"
+        android:layout_marginTop="5dp" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:background="#c0c0c0"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        android:visibility="visible"
+        android:id="@+id/separator"
+        android:layout_below="@id/goback"/>
+
+    <TextView
         android:text="@string/no_schedule"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -48,7 +68,8 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/scheduleList" />
+        android:id="@+id/scheduleList"
+        android:layout_below="@id/separator"/>
 
 
 </RelativeLayout>
