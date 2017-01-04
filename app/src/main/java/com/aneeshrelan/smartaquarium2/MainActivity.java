@@ -157,6 +157,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
                 dialog.setContentView(R.layout.duration);
                 dialog.setTitle(items.get(id) + " Scheduler");
 
+
                 loadSchedule(id, dialog);
 
 
