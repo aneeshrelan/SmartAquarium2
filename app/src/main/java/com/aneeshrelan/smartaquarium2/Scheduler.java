@@ -203,15 +203,7 @@ public class Scheduler extends AppCompatActivity implements LoadScheduleResponse
                 if(response.equals(Constants.validToggle))
                 {
                     Toast.makeText(Scheduler.this, "Schedule Deleted Successfully", Toast.LENGTH_SHORT).show();
-                    for(ScheduleData s : dataModel)
-                    {
-                        if(s.getScheduleID().equals(scheduleID))
-                            dataModel.remove(s);
-                    }
 
-                    adapter.notifyDataSetChanged();
-
-                    if(dataModel.size() == 0)
                         new LoadSchedule(lightID, Scheduler.this).execute();
 
 
