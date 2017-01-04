@@ -208,7 +208,13 @@ public class Scheduler extends AppCompatActivity implements LoadScheduleResponse
                         if(s.getScheduleID().equals(scheduleID))
                             dataModel.remove(s);
                     }
+
                     adapter.notifyDataSetChanged();
+
+                    if(dataModel.size() == 0)
+                        new LoadSchedule(lightID, Scheduler.this).execute();
+
+
                 }
                 else
                 {
@@ -248,6 +254,11 @@ public class Scheduler extends AppCompatActivity implements LoadScheduleResponse
 
             AlertDialog a = builder.create();
             a.show();
+
+            loader.setVisibility(View.GONE);
+            ((Button)dialog.findViewById(R.id.confirmButton)).setEnabled(true);
+            ((Button)dialog.findViewById(R.id.onSetTime)).setEnabled(true);
+            ((Button)dialog.findViewById(R.id.offSetTime)).setEnabled(true);
         }
         else if(onTime.equals(offTime))
         {
