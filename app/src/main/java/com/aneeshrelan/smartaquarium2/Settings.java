@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -42,6 +43,8 @@ public class Settings extends AppCompatActivity implements CheckBox.OnCheckedCha
     TextView localPort;
 
     CheckBox remoteCheckbox;
+    CheckBox alertCheckbox;
+
 
     TextView remoteDomain;
     TextView remotePort;
@@ -56,9 +59,13 @@ public class Settings extends AppCompatActivity implements CheckBox.OnCheckedCha
         localPort = (TextView)findViewById(R.id.text_localPort);
         remoteDomain = (TextView)findViewById(R.id.text_remoteDomain);
         remotePort = (TextView)findViewById(R.id.text_remotePort);
+        alertCheckbox = (CheckBox)findViewById(R.id.alertCheckbox);
+
+
+
 
         remoteCheckbox.setOnCheckedChangeListener(this);
-
+        alertCheckbox.setOnCheckedChangeListener(this);
 
         Boolean goback;
 
@@ -67,9 +74,12 @@ public class Settings extends AppCompatActivity implements CheckBox.OnCheckedCha
             goback = getIntent().getBooleanExtra("goback",false);
             if(goback)
             {
+
+                ((TableRow)findViewById(R.id.row_alertCheckbox)).setVisibility(View.VISIBLE);
+
                 ImageView gobackImage = (ImageView)findViewById(R.id.goback);
                 gobackImage.setVisibility(View.VISIBLE);
-
+                gobackImage.bringToFront();
                 gobackImage.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -112,23 +122,56 @@ public class Settings extends AppCompatActivity implements CheckBox.OnCheckedCha
         }
 
     }
+
+    protected void toggleAlertRows(int visibility)
+    {
+
+        ((TableRow)findViewById(R.id.row_waterTempHeading)).setVisibility(visibility);
+        ((TableRow)findViewById(R.id.row_waterMin)).setVisibility(visibility);
+        ((TableRow)findViewById(R.id.row_waterMax)).setVisibility(visibility);
+        ((TableRow)findViewById(R.id.row_systemTempHeading)).setVisibility(visibility);
+        ((TableRow)findViewById(R.id.row_systemMin)).setVisibility(visibility);
+        ((TableRow)findViewById(R.id.row_systemMax)).setVisibility(visibility);
+    }
     
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-        if(isChecked) {
-            ((TableRow) findViewById(R.id.heading_remote)).setVisibility(View.VISIBLE);
-            ((TableRow) findViewById(R.id.row_remoteDomain)).setVisibility(View.VISIBLE);
-            ((TableRow) findViewById(R.id.row_remotePort)).setVisibility(View.VISIBLE);
-            ((View)this.findViewById(R.id.separator)).setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            ((TableRow) findViewById(R.id.heading_remote)).setVisibility(View.GONE);
-            ((TableRow) findViewById(R.id.row_remoteDomain)).setVisibility(View.GONE);
-            ((TableRow) findViewById(R.id.row_remotePort)).setVisibility(View.GONE);
-            ((View)this.findViewById(R.id.separator)).setVisibility(View.GONE);
+        switch (buttonView.getId()) {
+
+
+            case R.id.remoteCheckbox:
+
+            if (isChecked) {
+                ((TableRow) findViewById(R.id.heading_remote)).setVisibility(View.VISIBLE);
+                ((TableRow) findViewById(R.id.row_remoteDomain)).setVisibility(View.VISIBLE);
+                ((TableRow) findViewById(R.id.row_remotePort)).setVisibility(View.VISIBLE);
+
+            } else {
+                ((TableRow) findViewById(R.id.heading_remote)).setVisibility(View.GONE);
+                ((TableRow) findViewById(R.id.row_remoteDomain)).setVisibility(View.GONE);
+                ((TableRow) findViewById(R.id.row_remotePort)).setVisibility(View.GONE);
+
+            }
+
+                break;
+
+            case R.id.alertCheckbox:
+
+
+                if(isChecked)
+                {
+                    toggleAlertRows(View.VISIBLE);
+                }
+                else
+                {
+                    toggleAlertRows(View.VISIBLE);
+                }
+
+
+                break;
+
         }
     }
 
@@ -202,6 +245,8 @@ public class Settings extends AppCompatActivity implements CheckBox.OnCheckedCha
         finish();
 
     }
+
+
 
 
     private class CheckSettings extends AsyncTask<String, Void, Void>{

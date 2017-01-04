@@ -44,5 +44,11 @@
     <string name="on">ON:</string>
     <string name="set_time">Set Time</string>
     <string name="lightScheduleHeading">Light Schedule Settings</string>
+    <string name="enable_temperature_alerts">Enable Temperature Alerts</string>
+    <string name="maximum">Maximum:</string>
+    <string name="minimum">Minimum:</string>
+    <string name="water_temperature">Water Temperature</string>
+    <string name="system_temperature">System Temperature</string>
+
 </resources>
 
