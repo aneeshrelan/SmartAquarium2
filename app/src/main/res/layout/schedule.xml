@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_schedule_dialog"
@@ -76,14 +81,31 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/confirmRow" >
+    </TableRow>
+</TableLayout>
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/activity_schedule_dialog"
+        android:layout_centerHorizontal="true">
         <Button
             android:text="@string/confirm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/confirmButton"
-            android:layout_span="3"
             android:layout_gravity="center"
             android:textSize="17sp" />
-    </TableRow>
-</TableLayout>
+
+        <ProgressBar
+            style="@android:style/Widget.Material.ProgressBar.Large"
+            android:id="@+id/confirmLoad"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:indeterminate="true"
+            android:layout_gravity="center"
+            tools:visibility="gone" />
+    </LinearLayout>
+
+</RelativeLayout>

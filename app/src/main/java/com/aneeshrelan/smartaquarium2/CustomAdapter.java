@@ -2,7 +2,9 @@ package com.aneeshrelan.smartaquarium2;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,10 +29,13 @@ import java.util.Objects;
  * Created by Aneesh on 03/01/17.
  */
 
-class CustomAdapter extends ArrayAdapter<ScheduleData>{
+class CustomAdapter extends ArrayAdapter<ScheduleData> {
 
    private ArrayList<ScheduleData> dataSet;
     Context context;
+
+    private Integer lightID;
+
 
     private static class ViewHolder{
         TextView scheduleHeading;
@@ -40,11 +46,16 @@ class CustomAdapter extends ArrayAdapter<ScheduleData>{
         
         Button modify;
         Button delete;
+
+        ProgressBar deleteSpinner;
+
     }
 
-    public CustomAdapter(ArrayList<ScheduleData> data, Context context)
+
+    public CustomAdapter(Integer lightID, ArrayList<ScheduleData> data, Context context)
     {
         super(context, R.layout.custom_row, data);
+        this.lightID = lightID;
         this.dataSet = data;
         this.context = context;
     }
@@ -70,7 +81,7 @@ class CustomAdapter extends ArrayAdapter<ScheduleData>{
             viewHolder.scheduleID = (TextView)convertView.findViewById(R.id.scheduleID);
             viewHolder.modify = (Button)convertView.findViewById(R.id.modifySchedule);
             viewHolder.delete = (Button)convertView.findViewById(R.id.deleteSchedule); 
-
+            viewHolder.deleteSpinner = (ProgressBar)convertView.findViewById(R.id.deleteLoad);
 
             convertView.setTag(viewHolder);
         }else{
@@ -85,11 +96,38 @@ class CustomAdapter extends ArrayAdapter<ScheduleData>{
         viewHolder.offTime.setText(dataModel.getOffTime());
         viewHolder.scheduleID.setText(dataModel.getScheduleID());
 
+
+        viewHolder.delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String scheduleID = dataModel.getScheduleID();
+                final Integer lightID = CustomAdapter.this.lightID;
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Confirm").setMessage("Are you sure you want to delete this schedule?").setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        viewHolder.deleteSpinner.setVisibility(View.VISIBLE);
+                        deleteSchedule(scheduleID, lightID,viewHolder.deleteSpinner);
+                        
+                    }
+                }).setNegativeButton("No",null).setCancelable(false);
+
+                AlertDialog a = builder.create();
+                a.show();
+            }
+        });
         
 
-        
         return convertView;
 
+    }
+
+    private void deleteSchedule(String scheduleID, Integer lightID, ProgressBar spinner)
+    {
 
     }
+
+
 }

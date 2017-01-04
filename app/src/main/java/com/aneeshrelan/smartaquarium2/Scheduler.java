@@ -3,7 +3,9 @@ package com.aneeshrelan.smartaquarium2;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -20,6 +23,8 @@ import android.widget.Toast;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
@@ -93,7 +98,7 @@ public class Scheduler extends AppCompatActivity implements LoadScheduleResponse
 
       if(result != null)
       {
-
+          ((TextView)findViewById(R.id.noScheduleMsg)).setVisibility(View.GONE);
           dataModel = new ArrayList<>();
           try {
               JSONArray schedules = result.getJSONArray("schedules");
@@ -106,7 +111,7 @@ public class Scheduler extends AppCompatActivity implements LoadScheduleResponse
                   dataModel.add(new ScheduleData((i+1) + "", item.getString("onTime"), item.getString("offTime"), item.getString("scheduleID")));
               }
 
-              adapter = new CustomAdapter(dataModel, getApplicationContext());
+              adapter = new CustomAdapter(id, dataModel, Scheduler.this);
               listView.setAdapter(adapter);
 
           } catch (JSONException e) {
@@ -128,15 +133,22 @@ public class Scheduler extends AppCompatActivity implements LoadScheduleResponse
         Button setOnTime = (Button)dialog.findViewById(R.id.onSetTime);
         Button setOffTime = (Button)dialog.findViewById(R.id.offSetTime);
 
+        final TextView onTime = (TextView)dialog.findViewById(R.id.onTimeValue);
+        final TextView offTime = (TextView)dialog.findViewById(R.id.offTimeValue);
+
+        Button confirm = (Button)dialog.findViewById(R.id.confirmButton);
+
         final Calendar dateAndTime = Calendar.getInstance();
 
+        final ProgressBar loader = (ProgressBar)dialog.findViewById(R.id.confirmLoad);
+        loader.setVisibility(View.GONE);
         setOnTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new TimePickerDialog(Scheduler.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        TextView onTime = (TextView)dialog.findViewById(R.id.onTimeValue);
+
                         onTime.setText(new StringBuilder().append(pad(hourOfDay)).append(":").append(pad(minute)));
 
                     }
@@ -150,7 +162,7 @@ public class Scheduler extends AppCompatActivity implements LoadScheduleResponse
                 new TimePickerDialog(Scheduler.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        TextView offTime = (TextView)dialog.findViewById(R.id.offTimeValue);
+
                         offTime.setText(new StringBuilder().append(pad(hourOfDay)).append(":").append(pad(minute)));
 
                     }
@@ -158,7 +170,98 @@ public class Scheduler extends AppCompatActivity implements LoadScheduleResponse
             }
         });
 
+
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loader.setVisibility(View.VISIBLE);
+                addScheduleRequest(onTime.getText().toString(), offTime.getText().toString(),dialog,loader);
+            }
+        });
+
+
+        dialog.show();
+
     }
+
+
+    protected void addScheduleRequest(final String onTime, final String offTime, final Dialog dialog, final ProgressBar loader)
+    {
+        String blank_time = getString(R.string.blank_time);
+
+        if(onTime.equals(blank_time) || offTime.equals(blank_time))
+        {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Error").setMessage("Choose a time. Time cannot be empty").setPositiveButton("OK",null).setCancelable(false);
+
+            AlertDialog a = builder.create();
+            a.show();
+        }
+        else if(onTime.equals(offTime))
+        {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Error").setMessage("ON and OFF Time cannot be equal").setPositiveButton("OK",null).setCancelable(false);
+
+            AlertDialog a = builder.create();
+            a.show();
+        }
+        else
+        {
+            RequestQueue queue = Volley.newRequestQueue(this);
+
+            StringRequest request = new StringRequest(Request.Method.POST, Constants.url_addSchedule, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+
+                    try {
+                        JSONObject json = new JSONObject(response);
+
+                        if(json.getString("msg").equals(Constants.validToggle))
+                        {
+                            Toast.makeText(Scheduler.this, "Schedule Added Successfully", Toast.LENGTH_SHORT).show();
+
+                            new LoadSchedule(id, Scheduler.this).execute();
+                        }
+                        else if(json.getString("msg").equals("duplicate"))
+                        {
+                            Toast.makeText(Scheduler.this, "Duplicate Schedule Error", Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(Scheduler.this, "Unable to Add Schedule", Toast.LENGTH_SHORT).show();
+                        }
+                        loader.setVisibility(View.GONE);
+                        dialog.dismiss();
+
+                    } catch (JSONException e) {
+                        Log.e(Constants.log, "ID: " + id + " AddSchedule JSONException e: " + e.getMessage());
+                        loader.setVisibility(View.GONE);
+                        dialog.dismiss();
+                    }
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e(Constants.log, "ID: " + id + " AddSchedule Error e: " + error.getMessage());
+                }
+            }){
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("id", id + "");
+                    params.put("onTime",onTime);
+                    params.put("offTime", offTime);
+
+                    return params;
+                }
+            };
+
+            queue.add(request);
+            queue.start();
+        }
+    }
+
 
     protected String pad(int c){
         if(c >= 10)

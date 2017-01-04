@@ -107,6 +107,16 @@
             android:layout_weight="1"
             android:textSize="18sp"
             tools:ignore="ButtonStyle" />
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:id="@+id/deleteLoad"
+            android:layout_weight="1"
+            android:indeterminate="true"
+            android:layout_gravity="center"
+            android:visibility="gone" />
     </LinearLayout>
 
 </RelativeLayout>
