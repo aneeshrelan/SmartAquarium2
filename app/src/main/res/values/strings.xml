@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SmartAquarium2</string>
+    <string name="app_name">Smart Aqua</string>
     <string name="hint_localDomain">192.168.0.100</string>
     <string name="hint_port">80</string>
     <string name="ip_domain">IP/Domain:</string>
