@@ -1,10 +1,15 @@
 package com.aneeshrelan.smartaquarium2;
 
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.TableRow;
+import android.widget.Toast;
+
+import com.android.volley.toolbox.StringRequest;
 
 public class NotificationSettings extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
 
@@ -49,6 +54,33 @@ public class NotificationSettings extends AppCompatActivity implements CompoundB
             ((TableRow)findViewById(R.id.row_save)).setVisibility(View.GONE);
         }
 
+
+    }
+
+    public void applySettings(View view) {
+
+        EditText text_water_min = (EditText)findViewById(R.id.water_min);
+        EditText text_water_max = (EditText)findViewById(R.id.water_max);
+        EditText text_system_min = (EditText)findViewById(R.id.system_min);
+        EditText text_system_max = (EditText)findViewById(R.id.system_max);
+        
+        
+        String water_min = text_water_min.getText().toString();
+        String water_max = text_water_max.getText().toString();
+        String system_min = text_system_min.getText().toString();
+        String system_max = text_system_max.getText().toString();
+        
+        
+        if(water_min.isEmpty() || water_max.isEmpty() || system_min.isEmpty() || system_max.isEmpty())
+        {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Error").setTitle("Values cannot be empty").setPositiveButton("OK",null).setCancelable(false);
+            AlertDialog a = builder.create();
+            a.show();
+            return;
+        }
+
+        Toast.makeText(this, "Applying", Toast.LENGTH_SHORT).show();
 
     }
 }
