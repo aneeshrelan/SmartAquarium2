@@ -52,12 +52,13 @@ class CustomAdapter extends ArrayAdapter<ScheduleData> {
     }
 
 
-    public CustomAdapter(Integer lightID, ArrayList<ScheduleData> data, Context context)
+    public CustomAdapter(Integer lightID, ArrayList<ScheduleData> data, Context context, Scheduler obj)
     {
         super(context, R.layout.custom_row, data);
         this.lightID = lightID;
         this.dataSet = data;
         this.context = context;
+
     }
 
     private int lastPosition = -1;
@@ -109,7 +110,10 @@ class CustomAdapter extends ArrayAdapter<ScheduleData> {
                     public void onClick(DialogInterface dialog, int which) {
 
                         viewHolder.deleteSpinner.setVisibility(View.VISIBLE);
-                        deleteSchedule(scheduleID, lightID,viewHolder.deleteSpinner);
+                        viewHolder.modify.setEnabled(false);
+                        viewHolder.delete.setEnabled(false);
+
+                        ((Scheduler)context).deleteSchedule(scheduleID, lightID);
                         
                     }
                 }).setNegativeButton("No",null).setCancelable(false);
@@ -124,10 +128,6 @@ class CustomAdapter extends ArrayAdapter<ScheduleData> {
 
     }
 
-    private void deleteSchedule(String scheduleID, Integer lightID, ProgressBar spinner)
-    {
-
-    }
 
 
 }

@@ -3,8 +3,11 @@ package com.aneeshrelan.smartaquarium2;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.provider.SyncStateContract;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -100,6 +103,7 @@ public class Scheduler extends AppCompatActivity implements LoadScheduleResponse
       {
           ((TextView)findViewById(R.id.noScheduleMsg)).setVisibility(View.GONE);
           dataModel = new ArrayList<>();
+
           try {
               JSONArray schedules = result.getJSONArray("schedules");
 
@@ -111,7 +115,7 @@ public class Scheduler extends AppCompatActivity implements LoadScheduleResponse
                   dataModel.add(new ScheduleData((i+1) + "", item.getString("onTime"), item.getString("offTime"), item.getString("scheduleID")));
               }
 
-              adapter = new CustomAdapter(id, dataModel, Scheduler.this);
+              adapter = new CustomAdapter(id, dataModel, Scheduler.this,this);
               listView.setAdapter(adapter);
 
           } catch (JSONException e) {
@@ -130,13 +134,13 @@ public class Scheduler extends AppCompatActivity implements LoadScheduleResponse
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.schedule);
 
-        Button setOnTime = (Button)dialog.findViewById(R.id.onSetTime);
-        Button setOffTime = (Button)dialog.findViewById(R.id.offSetTime);
+        final Button setOnTime = (Button)dialog.findViewById(R.id.onSetTime);
+        final Button setOffTime = (Button)dialog.findViewById(R.id.offSetTime);
 
         final TextView onTime = (TextView)dialog.findViewById(R.id.onTimeValue);
         final TextView offTime = (TextView)dialog.findViewById(R.id.offTimeValue);
 
-        Button confirm = (Button)dialog.findViewById(R.id.confirmButton);
+        final Button confirm = (Button)dialog.findViewById(R.id.confirmButton);
 
         final Calendar dateAndTime = Calendar.getInstance();
 
@@ -175,6 +179,9 @@ public class Scheduler extends AppCompatActivity implements LoadScheduleResponse
             @Override
             public void onClick(View v) {
                 loader.setVisibility(View.VISIBLE);
+                confirm.setEnabled(false);
+                setOnTime.setEnabled(false);
+                setOffTime.setEnabled(false);
                 addScheduleRequest(onTime.getText().toString(), offTime.getText().toString(),dialog,loader);
             }
         });
@@ -182,6 +189,51 @@ public class Scheduler extends AppCompatActivity implements LoadScheduleResponse
 
         dialog.show();
 
+    }
+
+
+    protected void deleteSchedule(final String scheduleID, final Integer lightID)
+    {
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        StringRequest request = new StringRequest(Request.Method.POST, Constants.url_delSchedule, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                if(response.equals(Constants.validToggle))
+                {
+                    Toast.makeText(Scheduler.this, "Schedule Deleted Successfully", Toast.LENGTH_SHORT).show();
+                    for(ScheduleData s : dataModel)
+                    {
+                        if(s.getScheduleID().equals(scheduleID))
+                            dataModel.remove(s);
+                    }
+                    adapter.notifyDataSetChanged();
+                }
+                else
+                {
+                    Toast.makeText(Scheduler.this, "Unable to Delete Schedule", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(Constants.log, "ID: " + lightID + " Schedule ID: " + scheduleID + " DelSchedule Error: " + error.getMessage());
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> params = new HashMap<>();
+                params.put("id", lightID + "");
+                params.put("scheduleID", scheduleID);
+
+                return params;
+            }
+        };
+
+        queue.add(request);
+        queue.start();
     }
 
 
