@@ -55,7 +55,7 @@ public class Scheduler extends AppCompatActivity implements LoadScheduleResponse
         add.setEnabled(true);
         goback.bringToFront();
 
-        dataModel = new ArrayList<>();
+
 
         id = getIntent().getIntExtra("id",0);
 
@@ -86,11 +86,15 @@ public class Scheduler extends AppCompatActivity implements LoadScheduleResponse
 
       if(result != null)
       {
+
+          dataModel = new ArrayList<>();
           try {
               JSONArray schedules = result.getJSONArray("schedules");
 
+
               for(int i = 0; i<schedules.length(); i++)
               {
+
                   JSONObject item = schedules.getJSONObject(i);
                   dataModel.add(new ScheduleData((i+1) + "", item.getString("onTime"), item.getString("offTime"), item.getString("scheduleID")));
               }
@@ -106,6 +110,12 @@ public class Scheduler extends AppCompatActivity implements LoadScheduleResponse
       {
           ((TextView)findViewById(R.id.noScheduleMsg)).setVisibility(View.VISIBLE);
       }
+
+    }
+
+    public void addSchedule(View view) {
+
+
 
     }
 

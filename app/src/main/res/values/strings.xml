@@ -39,5 +39,9 @@
     <string name="defaultOff">6:00</string>
     <string name="add_schedule">Add Schedule</string>
     <string name="no_schedule">No Schedule</string>
+    <string name="blank_time">--:--</string>
+    <string name="off">OFF:</string>
+    <string name="on">ON:</string>
+    <string name="set_time">Set Time</string>
 </resources>
 

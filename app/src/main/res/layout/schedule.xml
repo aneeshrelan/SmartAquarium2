@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_schedule_dialog"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:stretchColumns="0,1,2">
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/onTimeRow"
+        android:layout_marginBottom="15dp">
+
+        <TextView
+            android:text="@string/on"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView10"
+            android:textSize="20sp"
+            android:layout_gravity="center|end" />
+
+        <TextView
+            android:text="@string/blank_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|end"
+            android:id="@+id/onTimeValue"
+            android:textSize="17sp" />
+
+        <Button
+            android:text="@string/set_time"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:id="@+id/onSetTime"
+            android:textSize="17sp" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/offTimeRow"
+        android:layout_marginBottom="10dp">
+
+        <TextView
+            android:text="@string/off"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView11"
+            android:textSize="20sp"
+            android:layout_gravity="center|end"
+            android:textAlignment="center" />
+
+        <TextView
+            android:text="@string/blank_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|end"
+            android:id="@+id/offTimeValue"
+            android:textSize="17sp" />
+
+        <Button
+            android:text="@string/set_time"
+            android:layout_width="5dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:id="@+id/offSetTime"
+            android:textSize="17sp" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/confirmRow" >
+
+        <Button
+            android:text="@string/confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/confirmButton"
+            android:layout_span="3"
+            android:layout_gravity="center"
+            android:textSize="17sp" />
+    </TableRow>
+</TableLayout>
