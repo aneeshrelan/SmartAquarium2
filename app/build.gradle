@@ -11,7 +11,7 @@ android {
         versionName "2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        manifestPlaceholders = [onesignal_app_id: "fe48ea13-a1e6-4e49-bf00-bfb356997780",
+        manifestPlaceholders = [onesignal_app_id               : "fe48ea13-a1e6-4e49-bf00-bfb356997780",
                                 // Project number pulled from dashboard, local value is ignored.
                                 onesignal_google_project_number: "910253903230"]
     }
@@ -28,12 +28,13 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+
+
     compile 'com.android.support:appcompat-v7:24.2.1'
-    testCompile 'junit:junit:4.12'
     compile 'com.mcxiaoke.volley:library-aar:1.0.0'
-
-
     compile 'com.onesignal:OneSignal:3.+@aar'
-    compile 'com.google.android.gms:play-services-gcm:+'
-    compile "com.google.android.gms:play-services-location:+"
+    compile 'com.google.android.gms:play-services-gcm:10.0.1'
+    compile 'com.google.android.gms:play-services-location:10.0.1'
+    compile 'com.android.support:support-v4:24.2.1'
+    testCompile 'junit:junit:4.12'
 }

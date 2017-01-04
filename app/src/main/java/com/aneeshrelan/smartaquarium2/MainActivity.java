@@ -611,6 +611,18 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
                         Intent i = new Intent(MainActivity.this, Settings.class);
                         i.putExtra("goback", true);
                         startActivity(i);
+
+                        break;
+
+                    case R.id.notification:
+                        try {
+                            timer.cancel();
+                        } catch (Exception e) {
+                            Log.e(Constants.log, "Settings Timer cancel e: " + e.getMessage());
+                        }
+
+
+
                 }
                 return true;
             }

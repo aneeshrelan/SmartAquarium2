@@ -43,7 +43,6 @@ public class Settings extends AppCompatActivity implements CheckBox.OnCheckedCha
     TextView localPort;
 
     CheckBox remoteCheckbox;
-    CheckBox alertCheckbox;
 
 
     TextView remoteDomain;
@@ -59,13 +58,13 @@ public class Settings extends AppCompatActivity implements CheckBox.OnCheckedCha
         localPort = (TextView)findViewById(R.id.text_localPort);
         remoteDomain = (TextView)findViewById(R.id.text_remoteDomain);
         remotePort = (TextView)findViewById(R.id.text_remotePort);
-        alertCheckbox = (CheckBox)findViewById(R.id.alertCheckbox);
+
 
 
 
 
         remoteCheckbox.setOnCheckedChangeListener(this);
-        alertCheckbox.setOnCheckedChangeListener(this);
+
 
         Boolean goback;
 
@@ -75,7 +74,7 @@ public class Settings extends AppCompatActivity implements CheckBox.OnCheckedCha
             if(goback)
             {
 
-                ((TableRow)findViewById(R.id.row_alertCheckbox)).setVisibility(View.VISIBLE);
+
 
                 ImageView gobackImage = (ImageView)findViewById(R.id.goback);
                 gobackImage.setVisibility(View.VISIBLE);
@@ -123,27 +122,12 @@ public class Settings extends AppCompatActivity implements CheckBox.OnCheckedCha
 
     }
 
-    protected void toggleAlertRows(int visibility)
-    {
 
-        ((TableRow)findViewById(R.id.row_waterTempHeading)).setVisibility(visibility);
-        ((TableRow)findViewById(R.id.row_waterMin)).setVisibility(visibility);
-        ((TableRow)findViewById(R.id.row_waterMax)).setVisibility(visibility);
-        ((TableRow)findViewById(R.id.row_systemTempHeading)).setVisibility(visibility);
-        ((TableRow)findViewById(R.id.row_systemMin)).setVisibility(visibility);
-        ((TableRow)findViewById(R.id.row_systemMax)).setVisibility(visibility);
-    }
-    
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-        switch (buttonView.getId()) {
-
-
-            case R.id.remoteCheckbox:
-
-            if (isChecked) {
+                if (isChecked) {
                 ((TableRow) findViewById(R.id.heading_remote)).setVisibility(View.VISIBLE);
                 ((TableRow) findViewById(R.id.row_remoteDomain)).setVisibility(View.VISIBLE);
                 ((TableRow) findViewById(R.id.row_remotePort)).setVisibility(View.VISIBLE);
@@ -155,24 +139,6 @@ public class Settings extends AppCompatActivity implements CheckBox.OnCheckedCha
 
             }
 
-                break;
-
-            case R.id.alertCheckbox:
-
-
-                if(isChecked)
-                {
-                    toggleAlertRows(View.VISIBLE);
-                }
-                else
-                {
-                    toggleAlertRows(View.VISIBLE);
-                }
-
-
-                break;
-
-        }
     }
 
     public void saveSettings(View view) {
@@ -234,6 +200,7 @@ public class Settings extends AppCompatActivity implements CheckBox.OnCheckedCha
 
             }
         }
+
         
     }
 

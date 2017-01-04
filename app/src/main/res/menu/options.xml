@@ -7,4 +7,6 @@
 
     <item android:title="@string/settings"
         android:id="@+id/settings"/>
+    <item android:title="@string/notifications"
+        android:id="@+id/notification" />
 </menu>
