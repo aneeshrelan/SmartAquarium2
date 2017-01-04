@@ -136,7 +136,8 @@
                 android:inputType="number"
                 android:ems="10"
                 android:id="@+id/water_max"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:maxLength="2" />
 
             <TextView
                 android:text="@string/celsius"
@@ -183,7 +184,8 @@
                 android:inputType="number"
                 android:ems="10"
                 android:id="@+id/system_min"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:maxLength="2" />
 
             <TextView
                 android:text="@string/celsius"
@@ -212,7 +214,8 @@
                 android:inputType="number"
                 android:ems="10"
                 android:id="@+id/system_max"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:maxLength="2" />
 
             <TextView
                 android:text="@string/celsius"
