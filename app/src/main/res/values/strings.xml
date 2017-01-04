@@ -43,5 +43,6 @@
     <string name="off">OFF:</string>
     <string name="on">ON:</string>
     <string name="set_time">Set Time</string>
+    <string name="lightScheduleHeading">Light Schedule Settings</string>
 </resources>
 
