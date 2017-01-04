@@ -80,6 +80,17 @@ public class NotificationSettings extends AppCompatActivity implements CompoundB
             return;
         }
 
+        Integer w_min = Integer.parseInt(water_min);
+        Integer w_max = Integer.parseInt(water_max);
+        Integer s_min = Integer.parseInt(system_min);
+        Integer s_max = Integer.parseInt(system_max);
+
+        if((w_min > w_max) || (s_min > s_max))
+        {
+            new AlertDialog.Builder(this).setTitle("Error").setMessage("Minimum Value cannot be greater than Maximum Value").setPositiveButton("OK",null).setCancelable(false).create().show();
+            return;
+        }
+
         Toast.makeText(this, "Applying", Toast.LENGTH_SHORT).show();
 
     }
