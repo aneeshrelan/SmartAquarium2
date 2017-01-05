@@ -30,6 +30,10 @@ public class Constants {
     public static String url_getSchedule;
     public static String url_temp;
     public static String url_coreTemps;
+    public static String url_getNotification;
+    public static String url_setNotification;
+    public static String url_editNotification;
+    public static String url_deleteNotification;
 
 
     public static int localReachableTimeout = 1000;
@@ -43,6 +47,11 @@ public class Constants {
         url_getSchedule = domain + "getSchedule";
         url_temp = domain + "temp";
         url_coreTemps = domain + "coreTemps";
+
+        url_getNotification = domain + "getNotification";
+        url_setNotification = domain + "setNotification";
+        url_editNotification = domain + "editNotification";
+        url_deleteNotification = domain + "deleteNotification";
     }
 
 
