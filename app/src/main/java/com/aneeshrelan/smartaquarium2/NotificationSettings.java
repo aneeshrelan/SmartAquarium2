@@ -71,7 +71,7 @@ public class NotificationSettings extends AppCompatActivity implements CompoundB
     protected void onResume() {
         super.onResume();
 
-
+        notificationSwitch.setChecked(false);
         new LoadNotification(Constants.url_getNotification, NotificationSettings.this).execute();
     }
 
