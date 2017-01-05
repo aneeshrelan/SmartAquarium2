@@ -361,7 +361,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
         super.onResume();
 
 
-        Log.d(Constants.log, "onResume");
+//        Log.d(Constants.log, "onResume");
         prepareForRefresh();
         new CheckConnection(this).execute();
     }
@@ -594,7 +594,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.refresh:
-                        Log.d(Constants.log, "Refresh");
+//                        Log.d(Constants.log, "Refresh");
                         prepareForRefresh();
                         new CheckConnection(MainActivity.this).execute();
 
@@ -607,7 +607,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
                             Log.e(Constants.log, "Settings Timer cancel e: " + e.getMessage());
                         }
 
-                        Log.d(Constants.log, "Settings");
+//                        Log.d(Constants.log, "Settings");
                         Intent i = new Intent(MainActivity.this, Settings.class);
                         i.putExtra("goback", true);
                         startActivity(i);
@@ -673,7 +673,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
             anim.setInterpolator(new AccelerateDecelerateInterpolator());
             anim.start();
 
-            Log.d(Constants.log, localDomain + " - " + remoteDomain);
+//            Log.d(Constants.log, localDomain + " - " + remoteDomain);
 
         }
 
@@ -753,7 +753,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Co
             anim.end();
             anim.cancel();
 
-            Log.d(Constants.log, flag + "");
+//            Log.d(Constants.log, flag + "");
 
             switch (flag) {
                 case -1:

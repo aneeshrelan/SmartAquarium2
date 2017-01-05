@@ -36,11 +36,14 @@ public class NotificationSettings extends AppCompatActivity implements CompoundB
         notificationSwitch = (CompoundButton)findViewById(R.id.notificationSwitch);
         notificationSwitch.setOnCheckedChangeListener(this);
 
+
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
 
         new LoadNotification(Constants.url_getNotification, NotificationSettings.this).execute();
     }
