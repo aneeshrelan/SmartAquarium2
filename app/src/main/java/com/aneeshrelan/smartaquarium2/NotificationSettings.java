@@ -223,7 +223,51 @@ public class NotificationSettings extends AppCompatActivity implements CompoundB
 
             editNotification(water_min,water_max,system_min,system_max);
         }
+        else
+        {
+            //new notification settings
+            ((ProgressBar)findViewById(R.id.notificationProgress)).setVisibility(View.VISIBLE);
+            addNotification(water_min,water_max,system_min,system_max);
+        }
 
+    }
+
+    protected void addNotification(final String water_min,final String water_max, final String system_min, final String system_max)
+    {
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        StringRequest request = new StringRequest(Request.Method.POST, Constants.url_setNotification, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                if(response.equals(Constants.validToggle))
+                {
+                    ((ProgressBar)findViewById(R.id.notificationProgress)).setVisibility(View.GONE);
+                    Toast.makeText(NotificationSettings.this, "Temperature Alerts Set", Toast.LENGTH_SHORT).show();
+                    new LoadNotification(Constants.url_getNotification,NotificationSettings.this).execute();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(Constants.log, "Add Notification Error: " + error.getMessage());
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("water_min",water_min);
+                params.put("water_max",water_max);
+                params.put("system_min",system_min);
+                params.put("system_max",system_max);
+
+                return params;
+            }
+        };
+
+        queue.add(request);
+        queue.start();
     }
 
     protected void editNotification(final String water_min, final String water_max, final String system_min, final String system_max)
