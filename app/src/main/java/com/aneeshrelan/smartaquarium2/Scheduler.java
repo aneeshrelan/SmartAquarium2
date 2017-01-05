@@ -290,7 +290,7 @@ public class Scheduler extends AppCompatActivity implements LoadScheduleResponse
 
     @Override
     public void onClick(View v) {
-        Log.d(Constants.log, "Clicked");
+//        Log.d(Constants.log, "Clicked");
        final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.schedule);
         dialog.setTitle("Add Schedule");

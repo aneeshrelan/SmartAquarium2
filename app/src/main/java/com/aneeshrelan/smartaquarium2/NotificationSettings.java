@@ -15,11 +15,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TableRow;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -29,6 +33,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class NotificationSettings extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener, NotificationResponse, TextWatcher {
@@ -97,6 +103,9 @@ public class NotificationSettings extends AppCompatActivity implements CompoundB
 
                         toggleRows(View.GONE);
 
+                        ((ProgressBar)findViewById(R.id.notificationProgress)).setVisibility(View.VISIBLE);
+                        deleteNotification();
+
                         //refresh through loadNotification
 
                     }
@@ -109,6 +118,42 @@ public class NotificationSettings extends AppCompatActivity implements CompoundB
             toggleRows(View.GONE);
         }
 
+
+    }
+
+    protected void deleteNotification()
+    {
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        StringRequest request = new StringRequest(Request.Method.POST, Constants.url_deleteNotification, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                if(response.equals(Constants.validToggle))
+                {
+                    Toast.makeText(NotificationSettings.this, "Temperature Alerts Disabled", Toast.LENGTH_SHORT).show();
+
+                    new LoadNotification(Constants.url_getNotification,NotificationSettings.this).execute();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(Constants.log, "Delete Notification Error: " + error.getMessage());
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("confirm","yes");
+
+                return params;
+            }
+        };
+
+        queue.add(request);
+        queue.start();
 
     }
 

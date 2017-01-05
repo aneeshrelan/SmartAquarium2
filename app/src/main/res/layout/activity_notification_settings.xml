@@ -20,7 +20,8 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true"
         android:textSize="20sp"
-        android:layout_marginTop="5dp" />
+        android:layout_marginTop="5dp"
+        tools:ignore="RelativeOverlap" />
 
     <ImageView
         android:layout_width="30dp"
@@ -31,6 +32,15 @@
         android:layout_alignParentStart="true"
         android:onClick="goback"
         android:contentDescription="@string/go_back" />
+
+    <ProgressBar
+        style="?android:attr/progressBarStyle"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:id="@+id/notificationProgress"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:visibility="gone" />
 
     <View
         android:layout_width="fill_parent"
