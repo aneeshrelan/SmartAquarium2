@@ -33,8 +33,7 @@
         android:layout_alignParentEnd="true"
         android:contentDescription="@string/add_schedule"
         android:hapticFeedbackEnabled="true"
-        android:visibility="visible"
-        android:onClick="addSchedule" />
+        android:visibility="visible" />
 
     <TextView
         android:text="@string/lightScheduleHeading"

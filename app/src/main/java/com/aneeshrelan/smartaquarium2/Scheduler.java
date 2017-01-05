@@ -46,7 +46,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-public class Scheduler extends AppCompatActivity implements LoadScheduleResponse {
+public class Scheduler extends AppCompatActivity implements LoadScheduleResponse, View.OnClickListener {
 
     ArrayList<ScheduleData> dataModel;
     ListView listView;
@@ -71,6 +71,9 @@ public class Scheduler extends AppCompatActivity implements LoadScheduleResponse
         goback = (ImageView)findViewById(R.id.goback);
         add = (ImageView)findViewById(R.id.addSchedule);
         heading = (TextView)findViewById(R.id.lightScheduleHeading);
+
+
+        add.setOnClickListener(this);
 
         name = getIntent().getStringExtra("name");
 
@@ -139,70 +142,6 @@ public class Scheduler extends AppCompatActivity implements LoadScheduleResponse
 
     }
 
-    protected void addSchedule(View v)
-    {
-        Log.d(Constants.log, "Clicked");
-        final Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.schedule);
-        dialog.setTitle("Add Schedule");
-        final Button setOnTime = (Button)dialog.findViewById(R.id.onSetTime);
-        final Button setOffTime = (Button)dialog.findViewById(R.id.offSetTime);
-
-        final TextView onTime = (TextView)dialog.findViewById(R.id.onTimeValue);
-        final TextView offTime = (TextView)dialog.findViewById(R.id.offTimeValue);
-
-        final Button confirm = (Button)dialog.findViewById(R.id.confirmButton);
-
-        final Calendar dateAndTime = Calendar.getInstance();
-
-        final ProgressBar loader = (ProgressBar)dialog.findViewById(R.id.confirmLoad);
-        loader.setVisibility(View.GONE);
-        setOnTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new TimePickerDialog(Scheduler.this, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-
-                        onTime.setText(new StringBuilder().append(pad(hourOfDay)).append(":").append(pad(minute)));
-
-                    }
-                }, dateAndTime.get(Calendar.HOUR_OF_DAY), dateAndTime.get(Calendar.MINUTE),true).show();
-            }
-        });
-
-        setOffTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new TimePickerDialog(Scheduler.this, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-
-                        offTime.setText(new StringBuilder().append(pad(hourOfDay)).append(":").append(pad(minute)));
-
-                    }
-                }, dateAndTime.get(Calendar.HOUR_OF_DAY), dateAndTime.get(Calendar.MINUTE),true).show();
-            }
-        });
-
-
-        confirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loader.setVisibility(View.VISIBLE);
-                confirm.setEnabled(false);
-                setOnTime.setEnabled(false);
-                setOffTime.setEnabled(false);
-                addScheduleRequest(onTime.getText().toString(), offTime.getText().toString(),dialog,loader);
-            }
-        });
-
-
-        dialog.show();
-
-
-
-    }
 
 
     protected void deleteSchedule(final String scheduleID, final Integer lightID)
@@ -347,6 +286,69 @@ public class Scheduler extends AppCompatActivity implements LoadScheduleResponse
             return String.valueOf(c);
         else
             return "0" + String.valueOf(c);
+    }
+
+    @Override
+    public void onClick(View v) {
+        Log.d(Constants.log, "Clicked");
+       final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.schedule);
+        dialog.setTitle("Add Schedule");
+        final Button setOnTime = (Button)dialog.findViewById(R.id.onSetTime);
+        final Button setOffTime = (Button)dialog.findViewById(R.id.offSetTime);
+
+        final TextView onTime = (TextView)dialog.findViewById(R.id.onTimeValue);
+        final TextView offTime = (TextView)dialog.findViewById(R.id.offTimeValue);
+
+        final Button confirm = (Button)dialog.findViewById(R.id.confirmButton);
+
+        final Calendar dateAndTime = Calendar.getInstance();
+
+        final ProgressBar loader = (ProgressBar)dialog.findViewById(R.id.confirmLoad);
+        loader.setVisibility(View.GONE);
+        setOnTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new TimePickerDialog(Scheduler.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
+                        onTime.setText(new StringBuilder().append(pad(hourOfDay)).append(":").append(pad(minute)));
+
+                    }
+                }, dateAndTime.get(Calendar.HOUR_OF_DAY), dateAndTime.get(Calendar.MINUTE),true).show();
+            }
+        });
+
+        setOffTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new TimePickerDialog(Scheduler.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
+                        offTime.setText(new StringBuilder().append(pad(hourOfDay)).append(":").append(pad(minute)));
+
+                    }
+                }, dateAndTime.get(Calendar.HOUR_OF_DAY), dateAndTime.get(Calendar.MINUTE),true).show();
+            }
+        });
+
+
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loader.setVisibility(View.VISIBLE);
+                confirm.setEnabled(false);
+                setOnTime.setEnabled(false);
+                setOffTime.setEnabled(false);
+                addScheduleRequest(onTime.getText().toString(), offTime.getText().toString(),dialog,loader);
+            }
+        });
+
+       dialog.show();
+
+
     }
 
 
