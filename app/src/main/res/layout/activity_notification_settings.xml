@@ -72,7 +72,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/row_water_heading"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="10dp"
+            android:visibility="gone">
 
             <TextView
                 android:text="@string/water_temperature"
@@ -89,7 +90,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/row_water_min"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="10dp"
+            android:visibility="gone">
 
             <TextView
                 android:text="@string/minimum"
@@ -120,7 +122,8 @@
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/row_water_max">
+            android:id="@+id/row_water_max"
+            android:visibility="gone">
 
             <TextView
                 android:text="@string/maximum"
@@ -151,7 +154,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/row_system_heading"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="10dp"
+            android:visibility="gone">
 
             <TextView
                 android:text="@string/system_temperature"
@@ -168,7 +172,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="10dp"
-            android:id="@+id/row_system_min">
+            android:id="@+id/row_system_min"
+            android:visibility="gone">
 
             <TextView
                 android:text="@string/minimum"
@@ -198,7 +203,8 @@
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/row_system_max">
+            android:id="@+id/row_system_max"
+            android:visibility="gone">
 
             <TextView
                 android:text="@string/maximum"
@@ -229,7 +235,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/row_save"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="10dp"
+            android:visibility="gone">
 
             <Button
                 android:text="@string/apply"

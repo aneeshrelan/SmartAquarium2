@@ -42,6 +42,7 @@ public class NotificationSettings extends AppCompatActivity implements CompoundB
     protected void onResume() {
         super.onResume();
 
+        new LoadNotification(Constants.url_getNotification, NotificationSettings.this).execute();
     }
 
     public void goback(View view) {
