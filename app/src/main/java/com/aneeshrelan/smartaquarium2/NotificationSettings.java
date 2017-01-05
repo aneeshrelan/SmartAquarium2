@@ -49,6 +49,7 @@ public class NotificationSettings extends AppCompatActivity implements CompoundB
     EditText text_system_min;
     EditText text_system_max;
 
+    Boolean available = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,7 +90,7 @@ public class NotificationSettings extends AppCompatActivity implements CompoundB
         }
         else
         {
-            if(apply.getVisibility() == View.VISIBLE)
+            if(available)
             {
                 new AlertDialog.Builder(this).setTitle("Confirm").setMessage("Are you sure you want to disable temperature alerts").setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
@@ -212,7 +213,7 @@ public class NotificationSettings extends AppCompatActivity implements CompoundB
         {
             //settings available
             notificationSwitch.setChecked(true);
-
+            available = true;
             try {
                 result = result.getJSONObject("result");
 
