@@ -138,6 +138,7 @@ public class NotificationSettings extends AppCompatActivity implements CompoundB
 
                 if(response.equals(Constants.validToggle))
                 {
+                    available = false;
                     ((ProgressBar)findViewById(R.id.notificationProgress)).setVisibility(View.GONE);
                     Toast.makeText(NotificationSettings.this, "Temperature Alerts Disabled", Toast.LENGTH_SHORT).show();
 
