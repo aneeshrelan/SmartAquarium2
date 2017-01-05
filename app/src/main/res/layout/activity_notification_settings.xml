@@ -242,7 +242,7 @@
                 android:text="@string/apply"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/button2"
+                android:id="@+id/apply"
                 android:layout_weight="1"
                 android:onClick="applySettings"/>
         </TableRow>

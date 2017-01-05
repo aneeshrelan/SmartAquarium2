@@ -7,8 +7,11 @@ import android.provider.SyncStateContract;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TableRow;
@@ -23,14 +26,17 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.concurrent.ExecutionException;
 
-public class NotificationSettings extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener, NotificationResponse {
+public class NotificationSettings extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener, NotificationResponse, TextWatcher {
 
     CompoundButton notificationSwitch;
 
     Boolean available = false;
+
+    Button apply;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +46,7 @@ public class NotificationSettings extends AppCompatActivity implements CompoundB
         notificationSwitch = (CompoundButton)findViewById(R.id.notificationSwitch);
         notificationSwitch.setOnCheckedChangeListener(this);
 
-
+        apply = (Button)findViewById(R.id.apply);
 
     }
 
@@ -135,15 +141,29 @@ public class NotificationSettings extends AppCompatActivity implements CompoundB
             EditText text_system_min = (EditText)findViewById(R.id.system_min);
             EditText text_system_max = (EditText)findViewById(R.id.system_max);
 
+
+
+
+
             try {
-                JSONArray array = result.getJSONArray("result");
+                result = result.getJSONObject("result");
 
-                result = array.getJSONObject(0);
+                String w_min = result.getString("water_min").trim();
+                String w_max = result.getString("water_max").trim();
+                String s_min = result.getString("system_min").trim();
+                String s_max = result.getString("system_max").trim();
 
-                text_water_min.setText(result.getString("water_min").trim());
-                text_water_max.setText(result.getString("water_max").trim());
-                text_system_min.setText(result.getString("system_min").trim());
-                text_system_max.setText(result.getString("system_max").trim());
+                text_water_min.setText(w_min);
+                text_water_max.setText(w_max);
+                text_system_min.setText(s_min);
+                text_system_max.setText(s_max);
+
+                text_water_min.addTextChangedListener(this);
+                text_water_max.addTextChangedListener(this);
+                text_system_min.addTextChangedListener(this);
+                text_system_max.addTextChangedListener(this);
+
+                apply.setEnabled(false);
 
             } catch (JSONException e) {
                 Log.e(Constants.log, "ProcessFinish JSONArrayException e: "+ e.getMessage());
@@ -152,6 +172,23 @@ public class NotificationSettings extends AppCompatActivity implements CompoundB
 
         }
 
+
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        apply.setEnabled(true);
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
 
     }
 
