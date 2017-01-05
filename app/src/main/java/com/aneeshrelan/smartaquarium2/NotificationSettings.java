@@ -92,6 +92,13 @@ public class NotificationSettings extends AppCompatActivity implements CompoundB
 
         if(isChecked)
         {
+            if(!available)
+            {
+                text_water_min.setText("");
+                text_water_max.setText("");
+                text_system_min.setText("");
+                text_system_max.setText("");
+            }
             toggleRows(View.VISIBLE);
         }
         else
