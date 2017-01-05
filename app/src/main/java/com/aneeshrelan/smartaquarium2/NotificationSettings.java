@@ -35,9 +35,13 @@ public class NotificationSettings extends AppCompatActivity implements CompoundB
 
     CompoundButton notificationSwitch;
 
-    Boolean available = false;
 
     Button apply;
+
+    EditText text_water_min;
+    EditText text_water_max;
+    EditText text_system_min;
+    EditText text_system_max;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +52,11 @@ public class NotificationSettings extends AppCompatActivity implements CompoundB
         notificationSwitch.setOnCheckedChangeListener(this);
 
         apply = (Button)findViewById(R.id.apply);
+
+         text_water_min = (EditText)findViewById(R.id.water_min);
+         text_water_max = (EditText)findViewById(R.id.water_max);
+         text_system_min = (EditText)findViewById(R.id.system_min);
+         text_system_max = (EditText)findViewById(R.id.system_max);
 
     }
 
@@ -87,6 +96,8 @@ public class NotificationSettings extends AppCompatActivity implements CompoundB
                         //delete notification here
 
                         toggleRows(View.GONE);
+
+                        //refresh through loadNotification
 
                     }
                 }).setCancelable(false).create().show();
@@ -155,16 +166,6 @@ public class NotificationSettings extends AppCompatActivity implements CompoundB
         {
             //settings available
             notificationSwitch.setChecked(true);
-            available = true;
-
-            EditText text_water_min = (EditText)findViewById(R.id.water_min);
-            EditText text_water_max = (EditText)findViewById(R.id.water_max);
-            EditText text_system_min = (EditText)findViewById(R.id.system_min);
-            EditText text_system_max = (EditText)findViewById(R.id.system_max);
-
-
-
-
 
             try {
                 result = result.getJSONObject("result");
