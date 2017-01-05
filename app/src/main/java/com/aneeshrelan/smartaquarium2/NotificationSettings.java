@@ -214,14 +214,55 @@ public class NotificationSettings extends AppCompatActivity implements CompoundB
 
             if(water_min.equals(w_min) && water_max.equals(w_max) && system_min.equals(s_min) && system_max.equals(s_max))
             {
-                new AlertDialog.Builder(this).setTitle("Error").setMessage("Modify the values to edit settings").setPositiveButton("OK",null).setCancelable(false).create().show();;
+                new AlertDialog.Builder(this).setTitle("Error").setMessage("Values same as previous. Modify the values to edit settings").setPositiveButton("OK",null).setCancelable(false).create().show();;
                 return;
             }
 
 
+            ((ProgressBar)findViewById(R.id.notificationProgress)).setVisibility(View.VISIBLE);
 
+            editNotification(water_min,water_max,system_min,system_max);
         }
 
+    }
+
+    protected void editNotification(final String water_min, final String water_max, final String system_min, final String system_max)
+    {
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        StringRequest request = new StringRequest(Request.Method.POST, Constants.url_editNotification, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                if(response.equals(Constants.validToggle))
+                {
+                    ((ProgressBar)findViewById(R.id.notificationProgress)).setVisibility(View.GONE);
+                    Toast.makeText(NotificationSettings.this, "Notification Settings Updated", Toast.LENGTH_SHORT).show();
+
+                    new LoadNotification(Constants.url_getNotification, NotificationSettings.this).execute();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(Constants.log, "Edit Notification Error: " + error.getMessage());
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("water_min",water_min);
+                params.put("water_max",water_max);
+                params.put("system_min",system_min);
+                params.put("system_max",system_max);
+
+                return params;
+            }
+        };
+
+        queue.add(request);
+        queue.start();
     }
 
     @Override
