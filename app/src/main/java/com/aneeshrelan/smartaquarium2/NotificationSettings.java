@@ -20,6 +20,7 @@ import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,6 +29,9 @@ import java.util.concurrent.ExecutionException;
 public class NotificationSettings extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener, NotificationResponse {
 
     CompoundButton notificationSwitch;
+
+    Boolean available = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,6 +128,28 @@ public class NotificationSettings extends AppCompatActivity implements CompoundB
         {
             //settings available
             notificationSwitch.setChecked(true);
+            available = true;
+
+            EditText text_water_min = (EditText)findViewById(R.id.water_min);
+            EditText text_water_max = (EditText)findViewById(R.id.water_max);
+            EditText text_system_min = (EditText)findViewById(R.id.system_min);
+            EditText text_system_max = (EditText)findViewById(R.id.system_max);
+
+            try {
+                JSONArray array = result.getJSONArray("result");
+
+                result = array.getJSONObject(0);
+
+                text_water_min.setText(result.getString("water_min").trim());
+                text_water_max.setText(result.getString("water_max").trim());
+                text_system_min.setText(result.getString("system_min").trim());
+                text_system_max.setText(result.getString("system_max").trim());
+
+            } catch (JSONException e) {
+                Log.e(Constants.log, "ProcessFinish JSONArrayException e: "+ e.getMessage());
+            }
+
+
         }
 
 
