@@ -211,9 +211,12 @@ public class NotificationSettings extends AppCompatActivity implements CompoundB
         if(available)
         {
             //edit settings
-            Log.d(Constants.log, "Editing");
-            Log.d(Constants.log, "OLD: " + w_max + " New: " + water_max);
-            Log.d(Constants.log, "OLD: " + s_max + " New: " + system_max);
+
+            if(water_min.equals(w_min) && water_max.equals(w_max) && system_min.equals(s_min) && system_max.equals(s_max))
+            {
+                new AlertDialog.Builder(this).setTitle("Error").setMessage("Modify the values to edit settings").setPositiveButton("OK",null).setCancelable(false).create().show();;
+                return;
+            }
 
 
 
@@ -248,6 +251,7 @@ public class NotificationSettings extends AppCompatActivity implements CompoundB
                 text_system_min.addTextChangedListener(this);
                 text_system_max.addTextChangedListener(this);
 
+                apply.setText("Edit");
                 apply.setEnabled(false);
 
             } catch (JSONException e) {
