@@ -70,13 +70,7 @@ public class NotificationSettings extends AppCompatActivity implements CompoundB
 
         if(isChecked)
         {
-            ((TableRow)findViewById(R.id.row_water_heading)).setVisibility(View.VISIBLE);
-            ((TableRow)findViewById(R.id.row_water_min)).setVisibility(View.VISIBLE);
-            ((TableRow)findViewById(R.id.row_water_max)).setVisibility(View.VISIBLE);
-            ((TableRow)findViewById(R.id.row_system_heading)).setVisibility(View.VISIBLE);
-            ((TableRow)findViewById(R.id.row_system_min)).setVisibility(View.VISIBLE);
-            ((TableRow)findViewById(R.id.row_system_max)).setVisibility(View.VISIBLE);
-            ((TableRow)findViewById(R.id.row_save)).setVisibility(View.VISIBLE);
+            toggleRows(View.VISIBLE);
         }
         else
         {
@@ -91,6 +85,9 @@ public class NotificationSettings extends AppCompatActivity implements CompoundB
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //delete notification here
+
+                        toggleRows(View.GONE);
+
                     }
                 }).setCancelable(false).create().show();
 
@@ -98,16 +95,21 @@ public class NotificationSettings extends AppCompatActivity implements CompoundB
 
             }
 
-            ((TableRow)findViewById(R.id.row_water_heading)).setVisibility(View.GONE);
-            ((TableRow)findViewById(R.id.row_water_min)).setVisibility(View.GONE);
-            ((TableRow)findViewById(R.id.row_water_max)).setVisibility(View.GONE);
-            ((TableRow)findViewById(R.id.row_system_heading)).setVisibility(View.GONE);
-            ((TableRow)findViewById(R.id.row_system_min)).setVisibility(View.GONE);
-            ((TableRow)findViewById(R.id.row_system_max)).setVisibility(View.GONE);
-            ((TableRow)findViewById(R.id.row_save)).setVisibility(View.GONE);
+            toggleRows(View.GONE);
         }
 
 
+    }
+
+    protected void toggleRows(int visibility)
+    {
+        ((TableRow)findViewById(R.id.row_water_heading)).setVisibility(visibility);
+        ((TableRow)findViewById(R.id.row_water_min)).setVisibility(visibility);
+        ((TableRow)findViewById(R.id.row_water_max)).setVisibility(visibility);
+        ((TableRow)findViewById(R.id.row_system_heading)).setVisibility(visibility);
+        ((TableRow)findViewById(R.id.row_system_min)).setVisibility(visibility);
+        ((TableRow)findViewById(R.id.row_system_max)).setVisibility(visibility);
+        ((TableRow)findViewById(R.id.row_save)).setVisibility(visibility);
     }
 
     public void applySettings(View view) {
