@@ -50,6 +50,12 @@ public class NotificationSettings extends AppCompatActivity implements CompoundB
     EditText text_system_max;
 
     Boolean available = false;
+
+    String w_min;
+    String w_max;
+    String s_min;
+    String s_max;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -190,19 +196,28 @@ public class NotificationSettings extends AppCompatActivity implements CompoundB
             return;
         }
 
-        Integer w_min = Integer.parseInt(water_min);
-        Integer w_max = Integer.parseInt(water_max);
-        Integer s_min = Integer.parseInt(system_min);
-        Integer s_max = Integer.parseInt(system_max);
+        Integer i_w_min = Integer.parseInt(water_min);
+        Integer i_w_max = Integer.parseInt(water_max);
+        Integer i_s_min = Integer.parseInt(system_min);
+        Integer i_s_max = Integer.parseInt(system_max);
 
-        if((w_min > w_max) || (s_min > s_max))
+        if((i_w_min > i_w_max) || (i_s_min > i_s_max))
         {
             new AlertDialog.Builder(this).setTitle("Error").setMessage("Minimum Value cannot be greater than Maximum Value").setPositiveButton("OK",null).setCancelable(false).create().show();
             return;
         }
 
 
-        
+        if(available)
+        {
+            //edit settings
+            Log.d(Constants.log, "Editing");
+            Log.d(Constants.log, "OLD: " + w_max + " New: " + water_max);
+            Log.d(Constants.log, "OLD: " + s_max + " New: " + system_max);
+
+
+
+        }
 
     }
 
@@ -217,10 +232,11 @@ public class NotificationSettings extends AppCompatActivity implements CompoundB
             try {
                 result = result.getJSONObject("result");
 
-                String w_min = result.getString("water_min").trim();
-                String w_max = result.getString("water_max").trim();
-                String s_min = result.getString("system_min").trim();
-                String s_max = result.getString("system_max").trim();
+                 w_min = result.getString("water_min").trim();
+                 w_max = result.getString("water_max").trim();
+                 s_min = result.getString("system_min").trim();
+                 s_max = result.getString("system_max").trim();
+
 
                 text_water_min.setText(w_min);
                 text_water_max.setText(w_max);
@@ -258,6 +274,7 @@ public class NotificationSettings extends AppCompatActivity implements CompoundB
 
     @Override
     public void afterTextChanged(Editable s) {
+
 
     }
 
