@@ -2,6 +2,7 @@ package com.aneeshrelan.smartaquarium2;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.provider.SyncStateContract;
 import android.support.v7.app.AlertDialog;
@@ -65,7 +66,7 @@ public class NotificationSettings extends AppCompatActivity implements CompoundB
     }
 
     @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+    public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
 
         if(isChecked)
         {
@@ -79,6 +80,24 @@ public class NotificationSettings extends AppCompatActivity implements CompoundB
         }
         else
         {
+            if(apply.getVisibility() == View.VISIBLE)
+            {
+                new AlertDialog.Builder(this).setTitle("Confirm").setMessage("Are you sure you want to disable temperature alerts").setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        buttonView.setChecked(!isChecked);
+                    }
+                }).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //delete notification here
+                    }
+                }).setCancelable(false).create().show();
+
+                return;
+
+            }
+
             ((TableRow)findViewById(R.id.row_water_heading)).setVisibility(View.GONE);
             ((TableRow)findViewById(R.id.row_water_min)).setVisibility(View.GONE);
             ((TableRow)findViewById(R.id.row_water_max)).setVisibility(View.GONE);
