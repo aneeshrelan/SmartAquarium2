@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -57,6 +58,8 @@ public class Scheduler extends AppCompatActivity implements LoadScheduleResponse
 
     TextView heading;
 
+    String name;
+
     private static Integer id;
 
     @Override
@@ -69,7 +72,9 @@ public class Scheduler extends AppCompatActivity implements LoadScheduleResponse
         add = (ImageView)findViewById(R.id.addSchedule);
         heading = (TextView)findViewById(R.id.lightScheduleHeading);
 
-        heading.setText(getIntent().getStringExtra("name") + " Scheduler");
+        name = getIntent().getStringExtra("name");
+
+        heading.setText(name + " Scheduler");
 
         add.setEnabled(true);
         goback.bringToFront();
@@ -136,9 +141,10 @@ public class Scheduler extends AppCompatActivity implements LoadScheduleResponse
 
     protected void addSchedule(View v)
     {
+        Log.d(Constants.log, "Clicked");
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.schedule);
-
+        dialog.setTitle("Add Schedule");
         final Button setOnTime = (Button)dialog.findViewById(R.id.onSetTime);
         final Button setOffTime = (Button)dialog.findViewById(R.id.offSetTime);
 
@@ -193,6 +199,8 @@ public class Scheduler extends AppCompatActivity implements LoadScheduleResponse
 
 
         dialog.show();
+
+
 
     }
 
