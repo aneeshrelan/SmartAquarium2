@@ -11,6 +11,11 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.aneeshrelan.smartaquarium2.MainActivity">
 
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeToRefresh"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content">
+    </android.support.v4.widget.SwipeRefreshLayout>
     <TextView
         android:text="@string/initialTemp"
         android:layout_width="wrap_content"
@@ -232,4 +237,5 @@
 
         </TableRow>
     </TableLayout>
+
 </RelativeLayout>
